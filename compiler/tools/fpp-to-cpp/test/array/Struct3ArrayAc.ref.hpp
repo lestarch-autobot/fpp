@@ -10,6 +10,7 @@
 #include <initializer_list>
 
 #include "Fw/FPrimeBasicTypes.hpp"
+#include "Fw/Types/Assert.hpp"
 #include "Fw/Types/ExternalString.hpp"
 #include "Fw/Types/Serializable.hpp"
 #include "Fw/Types/String.hpp"
@@ -51,27 +52,51 @@ class Struct3 :
     // ----------------------------------------------------------------------
 
     //! Constructor (default value)
-    Struct3();
+    constexpr Struct3() :
+      Serializable(),
+      elements()
+    {
+    }
 
     //! Constructor (primitive array)
-    Struct3(
+    constexpr Struct3(
         const ElementType (&a)[SIZE] //!< The array
-    );
+    ) :
+      Serializable(),
+      elements()
+    {
+      *this = a;
+    }
 
     //! Constructor (single element)
-    explicit Struct3(
+    constexpr explicit Struct3(
         const ElementType& e //!< The element
-    );
+    ) :
+      Serializable(),
+      elements()
+    {
+      *this = e;
+    }
 
     //! Constructor (initializer list)
-    Struct3(
+    constexpr Struct3(
         const std::initializer_list<ElementType>& il //!< The initializer list
-    );
+    ) :
+      Serializable(),
+      elements()
+    {
+      *this = il;
+    }
 
     //! Copy constructor
-    Struct3(
+    constexpr Struct3(
         const Struct3& obj //!< The source object
-    );
+    ) :
+      Serializable(),
+      elements()
+    {
+      *this = obj;
+    }
 
   public:
 
@@ -85,29 +110,62 @@ class Struct3 :
     );
 
     //! Const subscript operator
-    const ElementType& operator[](
+    constexpr const ElementType& operator[](
         const FwSizeType i //!< The subscript index
-    ) const;
+    ) const
+    {
+      FW_ASSERT(i < SIZE, static_cast<FwAssertArgType>(i), static_cast<FwAssertArgType>(SIZE));
+      return this->elements[i];
+    }
 
     //! Copy assignment operator (object)
-    Struct3& operator=(
+    constexpr Struct3& operator=(
         const Struct3& obj //!< The source object
-    );
+    )
+    {
+      for (FwSizeType index = 0; index < SIZE; index++) {
+        this->elements[index] = obj.elements[index];
+      }
+      return *this;
+    }
 
     //! Copy assignment operator (primitive array)
-    Struct3& operator=(
+    constexpr Struct3& operator=(
         const ElementType (&a)[SIZE] //!< The source array
-    );
+    )
+    {
+      for (FwSizeType index = 0; index < SIZE; index++) {
+        this->elements[index] = a[index];
+      }
+      return *this;
+    }
 
     //! Copy assignment operator (initializer list)
-    Struct3& operator=(
+    constexpr Struct3& operator=(
         const std::initializer_list<ElementType>& il //!< The initializer list
-    );
+    )
+    {
+      // Check that the initializer has the expected size
+      FW_ASSERT(il.size() == SIZE, static_cast<FwAssertArgType>(il.size()), static_cast<FwAssertArgType>(SIZE));
+      FwSizeType i = 0;
+      for (const auto& e : il) {
+        FW_ASSERT(i < SIZE, static_cast<FwAssertArgType>(i), static_cast<FwAssertArgType>(SIZE));
+        this->elements[i] = e;
+        i++;
+      }
+      return *this;
+    }
 
     //! Copy assignment operator (single element)
-    Struct3& operator=(
+    constexpr Struct3& operator=(
         const ElementType& e //!< The element
-    );
+    )
+    {
+      for (FwSizeType index = 0; index < SIZE; index++) {
+        this->elements[index] = e;
+      }
+      return *this;
+    }
 
     //! Equality operator
     bool operator==(

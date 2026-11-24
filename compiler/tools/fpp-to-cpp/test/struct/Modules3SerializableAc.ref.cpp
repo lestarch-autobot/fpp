@@ -8,68 +8,8 @@
 #include "Modules3SerializableAc.hpp"
 
 // ----------------------------------------------------------------------
-// Constructors
-// ----------------------------------------------------------------------
-
-Modules3 ::
-  Modules3() :
-    Serializable(),
-    m_x(),
-    m_arr()
-{
-
-}
-
-Modules3 ::
-  Modules3(
-      const M::Modules2& x,
-      const Type_of_arr& arr
-  ) :
-    Serializable(),
-    m_x(x)
-{
-  for (FwSizeType i = 0; i < 3; i++) {
-    this->m_arr[i] = arr[i];
-  }
-}
-
-Modules3 ::
-  Modules3(const Modules3& obj) :
-    Serializable(),
-    m_x(obj.m_x)
-{
-  for (FwSizeType i = 0; i < 3; i++) {
-    this->m_arr[i] = obj.m_arr[i];
-  }
-}
-
-Modules3 ::
-  Modules3(
-      const M::Modules2& x,
-      const M::Modules2& arr
-  ) :
-    Serializable(),
-    m_x(x)
-{
-  for (FwSizeType i = 0; i < 3; i++) {
-    this->m_arr[i] = arr;
-  }
-}
-
-// ----------------------------------------------------------------------
 // Operators
 // ----------------------------------------------------------------------
-
-Modules3& Modules3 ::
-  operator=(const Modules3& obj)
-{
-  if (this == &obj) {
-    return *this;
-  }
-
-  set(obj.m_x, obj.m_arr);
-  return *this;
-}
 
 bool Modules3 ::
   operator==(const Modules3& obj) const
@@ -200,19 +140,6 @@ void Modules3 ::
 // ----------------------------------------------------------------------
 // Setter functions
 // ----------------------------------------------------------------------
-
-void Modules3 ::
-  set(
-      const M::Modules2& x,
-      const Type_of_arr& arr
-  )
-{
-  this->m_x = x;
-
-  for (FwSizeType i = 0; i < 3; i++) {
-    this->m_arr[i] = arr[i];
-  }
-}
 
 void Modules3 ::
   set_x(const M::Modules2& x)

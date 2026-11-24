@@ -8,33 +8,8 @@
 #include "Fw/Types/Assert.hpp"
 
 // ----------------------------------------------------------------------
-// Constructors
-// ----------------------------------------------------------------------
-
-Empty ::
-  Empty() :
-    Serializable()
-{
-
-}
-
-Empty ::
-  Empty(const Empty& obj) :
-    Serializable()
-{
-  (void) obj;
-}
-
-// ----------------------------------------------------------------------
 // Operators
 // ----------------------------------------------------------------------
-
-Empty& Empty ::
-  operator=(const Empty& obj)
-{
-  (void) obj;
-  return *this;
-}
 
 bool Empty ::
   operator==(const Empty& obj) const

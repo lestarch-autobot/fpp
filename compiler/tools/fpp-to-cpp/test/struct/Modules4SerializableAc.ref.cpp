@@ -8,74 +8,8 @@
 #include "Modules4SerializableAc.hpp"
 
 // ----------------------------------------------------------------------
-// Constructors
-// ----------------------------------------------------------------------
-
-Modules4 ::
-  Modules4() :
-    Serializable(),
-    m_arr1(),
-    m_arr2()
-{
-
-}
-
-Modules4 ::
-  Modules4(
-      const Type_of_arr1& arr1,
-      const Type_of_arr2& arr2
-  ) :
-    Serializable()
-{
-  for (FwSizeType i = 0; i < 3; i++) {
-    this->m_arr1[i] = arr1[i];
-  }
-  for (FwSizeType i = 0; i < 6; i++) {
-    this->m_arr2[i] = arr2[i];
-  }
-}
-
-Modules4 ::
-  Modules4(const Modules4& obj) :
-    Serializable()
-{
-  for (FwSizeType i = 0; i < 3; i++) {
-    this->m_arr1[i] = obj.m_arr1[i];
-  }
-  for (FwSizeType i = 0; i < 6; i++) {
-    this->m_arr2[i] = obj.m_arr2[i];
-  }
-}
-
-Modules4 ::
-  Modules4(
-      const M::Modules2& arr1,
-      const M::Modules2& arr2
-  ) :
-    Serializable()
-{
-  for (FwSizeType i = 0; i < 3; i++) {
-    this->m_arr1[i] = arr1;
-  }
-  for (FwSizeType i = 0; i < 6; i++) {
-    this->m_arr2[i] = arr2;
-  }
-}
-
-// ----------------------------------------------------------------------
 // Operators
 // ----------------------------------------------------------------------
-
-Modules4& Modules4 ::
-  operator=(const Modules4& obj)
-{
-  if (this == &obj) {
-    return *this;
-  }
-
-  set(obj.m_arr1, obj.m_arr2);
-  return *this;
-}
 
 bool Modules4 ::
   operator==(const Modules4& obj) const
@@ -219,21 +153,6 @@ void Modules4 ::
 // ----------------------------------------------------------------------
 // Setter functions
 // ----------------------------------------------------------------------
-
-void Modules4 ::
-  set(
-      const Type_of_arr1& arr1,
-      const Type_of_arr2& arr2
-  )
-{
-
-  for (FwSizeType i = 0; i < 3; i++) {
-    this->m_arr1[i] = arr1[i];
-  }
-  for (FwSizeType i = 0; i < 6; i++) {
-    this->m_arr2[i] = arr2[i];
-  }
-}
 
 void Modules4 ::
   set_arr1(const Type_of_arr1& arr1)

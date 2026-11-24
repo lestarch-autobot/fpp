@@ -8,46 +8,6 @@
 #include "Struct3ArrayAc.hpp"
 
 // ----------------------------------------------------------------------
-// Constructors
-// ----------------------------------------------------------------------
-
-Struct3 ::
-  Struct3() :
-    Serializable(),
-    elements()
-{
-
-}
-
-Struct3 ::
-  Struct3(const ElementType (&a)[SIZE]) :
-    Serializable()
-{
-  *this = a;
-}
-
-Struct3 ::
-  Struct3(const ElementType& e) :
-    Serializable()
-{
-  *this = e;
-}
-
-Struct3 ::
-  Struct3(const std::initializer_list<ElementType>& il) :
-    Serializable()
-{
-  *this = il;
-}
-
-Struct3 ::
-  Struct3(const Struct3& obj) :
-    Serializable()
-{
-  *this = obj;
-}
-
-// ----------------------------------------------------------------------
 // Operators
 // ----------------------------------------------------------------------
 
@@ -56,56 +16,6 @@ Struct3::ElementType& Struct3 ::
 {
   FW_ASSERT(i < SIZE, static_cast<FwAssertArgType>(i), static_cast<FwAssertArgType>(SIZE));
   return this->elements[i];
-}
-
-const Struct3::ElementType& Struct3 ::
-  operator[](const FwSizeType i) const
-{
-  FW_ASSERT(i < SIZE, static_cast<FwAssertArgType>(i), static_cast<FwAssertArgType>(SIZE));
-  return this->elements[i];
-}
-
-Struct3& Struct3 ::
-  operator=(const Struct3& obj)
-{
-  if (this != &obj) {
-    for (FwSizeType index = 0; index < SIZE; index++) {
-      this->elements[index] = obj.elements[index];
-    }
-  }
-  return *this;
-}
-
-Struct3& Struct3 ::
-  operator=(const ElementType (&a)[SIZE])
-{
-  for (FwSizeType index = 0; index < SIZE; index++) {
-    this->elements[index] = a[index];
-  }
-  return *this;
-}
-
-Struct3& Struct3 ::
-  operator=(const std::initializer_list<ElementType>& il)
-{
-  // Check that the initializer has the expected size
-  FW_ASSERT(il.size() == SIZE, static_cast<FwAssertArgType>(il.size()), static_cast<FwAssertArgType>(SIZE));
-  FwSizeType i = 0;
-  for (const auto& e : il) {
-    FW_ASSERT(i < SIZE, static_cast<FwAssertArgType>(i), static_cast<FwAssertArgType>(SIZE));
-    this->elements[i] = e;
-    i++;
-  }
-  return *this;
-}
-
-Struct3& Struct3 ::
-  operator=(const ElementType& e)
-{
-  for (FwSizeType index = 0; index < SIZE; index++) {
-    this->elements[index] = e;
-  }
-  return *this;
 }
 
 bool Struct3 ::

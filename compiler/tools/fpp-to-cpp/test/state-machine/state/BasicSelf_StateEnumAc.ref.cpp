@@ -17,41 +17,6 @@ namespace FppTest {
     // Operators
     // ----------------------------------------------------------------------
 
-    BasicSelf_State& BasicSelf_State ::
-      operator=(const BasicSelf_State& obj)
-    {
-      this->e = obj.e;
-#ifdef BUILD_UT
-      this->m_serializeValueIsSet = obj.m_serializeValueIsSet;
-      this->m_serializeValue = obj.m_serializeValue;
-#endif
-      return *this;
-    }
-
-    BasicSelf_State& BasicSelf_State ::
-      operator=(SerialType e1)
-    {
-      FW_ASSERT(isValid(e1), static_cast<FwAssertArgType>(e1));
-      this->e = static_cast<enum T>(e1);
-#ifdef BUILD_UT
-      this->m_serializeValueIsSet = false;
-      this->m_serializeValue = 0;
-#endif
-      return *this;
-    }
-
-    BasicSelf_State& BasicSelf_State ::
-      operator=(enum T e1)
-    {
-      FW_ASSERT(isValid(e1), static_cast<FwAssertArgType>(e1));
-      this->e = e1;
-#ifdef BUILD_UT
-      this->m_serializeValueIsSet = false;
-      this->m_serializeValue = 0;
-#endif
-      return *this;
-    }
-
 #ifdef BUILD_UT
 
     std::ostream& operator<<(std::ostream& os, const BasicSelf_State& obj) {
@@ -140,16 +105,6 @@ namespace FppTest {
     }
 
 #endif
-
-    // ----------------------------------------------------------------------
-    // Static functions
-    // ----------------------------------------------------------------------
-
-    bool BasicSelf_State ::
-      isValid(SerialType serialTypeValue)
-    {
-      return (serialTypeValue <= S);
-    }
 
   }
 

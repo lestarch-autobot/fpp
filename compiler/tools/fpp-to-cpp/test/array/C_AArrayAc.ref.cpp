@@ -8,46 +8,6 @@
 #include "Fw/Types/Assert.hpp"
 
 // ----------------------------------------------------------------------
-// Constructors
-// ----------------------------------------------------------------------
-
-C_A ::
-  C_A() :
-    Serializable(),
-    elements()
-{
-
-}
-
-C_A ::
-  C_A(const ElementType (&a)[SIZE]) :
-    Serializable()
-{
-  *this = a;
-}
-
-C_A ::
-  C_A(const ElementType& e) :
-    Serializable()
-{
-  *this = e;
-}
-
-C_A ::
-  C_A(const std::initializer_list<ElementType>& il) :
-    Serializable()
-{
-  *this = il;
-}
-
-C_A ::
-  C_A(const C_A& obj) :
-    Serializable()
-{
-  *this = obj;
-}
-
-// ----------------------------------------------------------------------
 // Operators
 // ----------------------------------------------------------------------
 
@@ -56,56 +16,6 @@ C_A::ElementType& C_A ::
 {
   FW_ASSERT(i < SIZE, static_cast<FwAssertArgType>(i), static_cast<FwAssertArgType>(SIZE));
   return this->elements[i];
-}
-
-const C_A::ElementType& C_A ::
-  operator[](const FwSizeType i) const
-{
-  FW_ASSERT(i < SIZE, static_cast<FwAssertArgType>(i), static_cast<FwAssertArgType>(SIZE));
-  return this->elements[i];
-}
-
-C_A& C_A ::
-  operator=(const C_A& obj)
-{
-  if (this != &obj) {
-    for (FwSizeType index = 0; index < SIZE; index++) {
-      this->elements[index] = obj.elements[index];
-    }
-  }
-  return *this;
-}
-
-C_A& C_A ::
-  operator=(const ElementType (&a)[SIZE])
-{
-  for (FwSizeType index = 0; index < SIZE; index++) {
-    this->elements[index] = a[index];
-  }
-  return *this;
-}
-
-C_A& C_A ::
-  operator=(const std::initializer_list<ElementType>& il)
-{
-  // Check that the initializer has the expected size
-  FW_ASSERT(il.size() == SIZE, static_cast<FwAssertArgType>(il.size()), static_cast<FwAssertArgType>(SIZE));
-  FwSizeType i = 0;
-  for (const auto& e : il) {
-    FW_ASSERT(i < SIZE, static_cast<FwAssertArgType>(i), static_cast<FwAssertArgType>(SIZE));
-    this->elements[i] = e;
-    i++;
-  }
-  return *this;
-}
-
-C_A& C_A ::
-  operator=(const ElementType& e)
-{
-  for (FwSizeType index = 0; index < SIZE; index++) {
-    this->elements[index] = e;
-  }
-  return *this;
 }
 
 bool C_A ::

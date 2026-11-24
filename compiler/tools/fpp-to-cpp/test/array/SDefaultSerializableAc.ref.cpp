@@ -8,47 +8,8 @@
 #include "SDefaultSerializableAc.hpp"
 
 // ----------------------------------------------------------------------
-// Constructors
-// ----------------------------------------------------------------------
-
-SDefault ::
-  SDefault() :
-    Serializable(),
-    m_x(42)
-{
-
-}
-
-SDefault ::
-  SDefault(U32 x) :
-    Serializable(),
-    m_x(x)
-{
-
-}
-
-SDefault ::
-  SDefault(const SDefault& obj) :
-    Serializable(),
-    m_x(obj.m_x)
-{
-
-}
-
-// ----------------------------------------------------------------------
 // Operators
 // ----------------------------------------------------------------------
-
-SDefault& SDefault ::
-  operator=(const SDefault& obj)
-{
-  if (this == &obj) {
-    return *this;
-  }
-
-  set(obj.m_x);
-  return *this;
-}
 
 bool SDefault ::
   operator==(const SDefault& obj) const
@@ -137,12 +98,6 @@ void SDefault ::
 // ----------------------------------------------------------------------
 // Setter functions
 // ----------------------------------------------------------------------
-
-void SDefault ::
-  set(U32 x)
-{
-  this->m_x = x;
-}
 
 void SDefault ::
   set_x(U32 x)

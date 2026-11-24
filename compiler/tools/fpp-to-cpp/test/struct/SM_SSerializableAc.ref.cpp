@@ -8,47 +8,8 @@
 #include "SM_SSerializableAc.hpp"
 
 // ----------------------------------------------------------------------
-// Constructors
-// ----------------------------------------------------------------------
-
-SM_S ::
-  SM_S() :
-    Serializable(),
-    m_x()
-{
-
-}
-
-SM_S ::
-  SM_S(U32 x) :
-    Serializable(),
-    m_x(x)
-{
-
-}
-
-SM_S ::
-  SM_S(const SM_S& obj) :
-    Serializable(),
-    m_x(obj.m_x)
-{
-
-}
-
-// ----------------------------------------------------------------------
 // Operators
 // ----------------------------------------------------------------------
-
-SM_S& SM_S ::
-  operator=(const SM_S& obj)
-{
-  if (this == &obj) {
-    return *this;
-  }
-
-  set(obj.m_x);
-  return *this;
-}
 
 bool SM_S ::
   operator==(const SM_S& obj) const
@@ -137,12 +98,6 @@ void SM_S ::
 // ----------------------------------------------------------------------
 // Setter functions
 // ----------------------------------------------------------------------
-
-void SM_S ::
-  set(U32 x)
-{
-  this->m_x = x;
-}
 
 void SM_S ::
   set_x(U32 x)

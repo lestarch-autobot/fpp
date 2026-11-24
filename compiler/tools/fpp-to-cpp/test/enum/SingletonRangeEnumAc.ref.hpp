@@ -55,35 +55,40 @@ class SingletonRange :
     // ----------------------------------------------------------------------
 
     //! Constructor (default value of A)
-    SingletonRange()
+    constexpr SingletonRange() :
+      Serializable(),
+      e(A)
     {
-      this->e = A;
+
     }
 
     //! Constructor (user-provided value)
-    SingletonRange(
+    constexpr SingletonRange(
         const enum T e1 //!< The raw enum value
-    )
+    ) :
+      Serializable(),
+      e(e1)
     {
       FW_ASSERT(isValid(e1), static_cast<FwAssertArgType>(e1));
-      this->e = e1;
     }
 
     //! Constructor (serial representation value)
-    SingletonRange(
+    constexpr SingletonRange(
         const SerialType e1 //!< The serial representation value
-    )
+    ) :
+      Serializable(),
+      e(static_cast<enum T>(e1))
     {
       FW_ASSERT(isValid(e1), static_cast<FwAssertArgType>(e1));
-      this->e = static_cast<enum T>(e1);
     }
 
     //! Copy constructor
-    SingletonRange(
+    constexpr SingletonRange(
         const SingletonRange& obj //!< The source object
-    )
+    ) :
+      Serializable(),
+      e(obj.e)
     {
-      this->e = obj.e;
 #ifdef BUILD_UT
     this->m_serializeValueIsSet = obj.m_serializeValueIsSet;
     this->m_serializeValue = obj.m_serializeValue;
@@ -97,34 +102,60 @@ class SingletonRange :
     // ----------------------------------------------------------------------
 
     //! Copy assignment operator (object)
-    SingletonRange& operator=(
+    constexpr SingletonRange& operator=(
         const SingletonRange& obj //!< The source object
-    );
+    )
+    {
+      this->e = obj.e;
+#ifdef BUILD_UT
+    this->m_serializeValueIsSet = obj.m_serializeValueIsSet;
+    this->m_serializeValue = obj.m_serializeValue;
+#endif
+      return *this;
+    }
 
     //! Assignment operator (serial representation value)
-    SingletonRange& operator=(
+    constexpr SingletonRange& operator=(
         SerialType e1 //!< The serial representation value
-    );
+    )
+    {
+      FW_ASSERT(isValid(e1), static_cast<FwAssertArgType>(e1));
+      this->e = static_cast<enum T>(e1);
+#ifdef BUILD_UT
+    this->m_serializeValueIsSet = false;
+    this->m_serializeValue = 0;
+#endif
+      return *this;
+    }
 
     //! Copy assignment operator (raw enum)
-    SingletonRange& operator=(
+    constexpr SingletonRange& operator=(
         enum T e1 //!< The enum value
-    );
+    )
+    {
+      FW_ASSERT(isValid(e1), static_cast<FwAssertArgType>(e1));
+      this->e = e1;
+#ifdef BUILD_UT
+    this->m_serializeValueIsSet = false;
+    this->m_serializeValue = 0;
+#endif
+      return *this;
+    }
 
     //! Conversion operator
-    operator enum T() const
+    constexpr operator enum T() const
     {
       return this->e;
     }
 
     //! Equality operator
-    bool operator==(enum T e1) const
+    constexpr bool operator==(enum T e1) const
     {
       return this->e == e1;
     }
 
     //! Inequality operator
-    bool operator!=(enum T e1) const
+    constexpr bool operator!=(enum T e1) const
     {
       return !(*this == e1);
     }
@@ -185,9 +216,13 @@ class SingletonRange :
     // ----------------------------------------------------------------------
 
     //! Check serial type value for validity
-    static bool isValid(
+    static constexpr bool isValid(
         SerialType serialTypeValue //!< The serial type value
-    );
+    )
+    {
+      return (serialTypeValue == A)
+        || ((serialTypeValue >= B) && (serialTypeValue <= C));
+    }
 
   public:
 

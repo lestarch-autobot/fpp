@@ -48,24 +48,53 @@ namespace S {
       // ----------------------------------------------------------------------
 
       //! Constructor (default value)
-      S3();
+      constexpr S3() :
+        Serializable(),
+        m_mU32Array(),
+        m_mF64()
+      {
+      }
 
       //! Member constructor
-      S3(
+      constexpr S3(
           const Type_of_mU32Array& mU32Array,
           F64 mF64
-      );
+      ) :
+        Serializable(),
+        m_mU32Array(),
+        m_mF64(mF64)
+      {
+        for (FwSizeType i = 0; i < 3; i++) {
+          this->m_mU32Array[i] = mU32Array[i];
+        }
+      }
 
       //! Copy constructor
-      S3(
+      constexpr S3(
           const S3& obj //!< The source object
-      );
+      ) :
+        Serializable(),
+        m_mU32Array(),
+        m_mF64(obj.m_mF64)
+      {
+        for (FwSizeType i = 0; i < 3; i++) {
+          this->m_mU32Array[i] = obj.m_mU32Array[i];
+        }
+      }
 
       //! Member constructor (scalar values for arrays)
-      S3(
+      constexpr S3(
           U32 mU32Array,
           F64 mF64
-      );
+      ) :
+        Serializable(),
+        m_mU32Array(),
+        m_mF64(mF64)
+      {
+        for (FwSizeType i = 0; i < 3; i++) {
+          this->m_mU32Array[i] = mU32Array;
+        }
+      }
 
     public:
 
@@ -74,9 +103,13 @@ namespace S {
       // ----------------------------------------------------------------------
 
       //! Copy assignment operator
-      S3& operator=(
+      constexpr S3& operator=(
           const S3& obj //!< The source object
-      );
+      )
+      {
+        set(obj.m_mU32Array, obj.m_mF64);
+        return *this;
+      }
 
       //! Equality operator
       bool operator==(
@@ -139,13 +172,13 @@ namespace S {
       }
 
       //! Get member mU32Array (const)
-      const Type_of_mU32Array& get_mU32Array() const
+      constexpr const Type_of_mU32Array& get_mU32Array() const
       {
         return this->m_mU32Array;
       }
 
       //! Get member mF64
-      F64 get_mF64() const
+      constexpr F64 get_mF64() const
       {
         return this->m_mF64;
       }
@@ -155,10 +188,17 @@ namespace S {
       // ----------------------------------------------------------------------
 
       //! Set all members
-      void set(
+      constexpr void set(
           const Type_of_mU32Array& mU32Array,
           F64 mF64
-      );
+      )
+      {
+        this->m_mF64 = mF64;
+
+        for (FwSizeType i = 0; i < 3; i++) {
+          this->m_mU32Array[i] = mU32Array[i];
+        }
+      }
 
       //! Set member mU32Array
       void set_mU32Array(const Type_of_mU32Array& mU32Array);

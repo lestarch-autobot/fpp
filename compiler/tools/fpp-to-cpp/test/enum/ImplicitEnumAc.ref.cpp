@@ -15,41 +15,6 @@ namespace M {
   // Operators
   // ----------------------------------------------------------------------
 
-  Implicit& Implicit ::
-    operator=(const Implicit& obj)
-  {
-    this->e = obj.e;
-#ifdef BUILD_UT
-    this->m_serializeValueIsSet = obj.m_serializeValueIsSet;
-    this->m_serializeValue = obj.m_serializeValue;
-#endif
-    return *this;
-  }
-
-  Implicit& Implicit ::
-    operator=(SerialType e1)
-  {
-    FW_ASSERT(isValid(e1), static_cast<FwAssertArgType>(e1));
-    this->e = static_cast<enum T>(e1);
-#ifdef BUILD_UT
-    this->m_serializeValueIsSet = false;
-    this->m_serializeValue = 0;
-#endif
-    return *this;
-  }
-
-  Implicit& Implicit ::
-    operator=(enum T e1)
-  {
-    FW_ASSERT(isValid(e1), static_cast<FwAssertArgType>(e1));
-    this->e = e1;
-#ifdef BUILD_UT
-    this->m_serializeValueIsSet = false;
-    this->m_serializeValue = 0;
-#endif
-    return *this;
-  }
-
 #ifdef BUILD_UT
 
   std::ostream& operator<<(std::ostream& os, const Implicit& obj) {
@@ -138,15 +103,5 @@ namespace M {
   }
 
 #endif
-
-  // ----------------------------------------------------------------------
-  // Static functions
-  // ----------------------------------------------------------------------
-
-  bool Implicit ::
-    isValid(SerialType serialTypeValue)
-  {
-    return ((serialTypeValue >= X) && (serialTypeValue <= Y));
-  }
 
 }

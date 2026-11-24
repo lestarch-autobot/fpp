@@ -8,46 +8,6 @@
 #include "LargeSizeArrayAc.hpp"
 
 // ----------------------------------------------------------------------
-// Constructors
-// ----------------------------------------------------------------------
-
-LargeSize ::
-  LargeSize() :
-    Serializable(),
-    elements()
-{
-
-}
-
-LargeSize ::
-  LargeSize(const ElementType (&a)[SIZE]) :
-    Serializable()
-{
-  *this = a;
-}
-
-LargeSize ::
-  LargeSize(const ElementType& e) :
-    Serializable()
-{
-  *this = e;
-}
-
-LargeSize ::
-  LargeSize(const std::initializer_list<ElementType>& il) :
-    Serializable()
-{
-  *this = il;
-}
-
-LargeSize ::
-  LargeSize(const LargeSize& obj) :
-    Serializable()
-{
-  *this = obj;
-}
-
-// ----------------------------------------------------------------------
 // Operators
 // ----------------------------------------------------------------------
 
@@ -56,56 +16,6 @@ LargeSize::ElementType& LargeSize ::
 {
   FW_ASSERT(i < SIZE, static_cast<FwAssertArgType>(i), static_cast<FwAssertArgType>(SIZE));
   return this->elements[i];
-}
-
-const LargeSize::ElementType& LargeSize ::
-  operator[](const FwSizeType i) const
-{
-  FW_ASSERT(i < SIZE, static_cast<FwAssertArgType>(i), static_cast<FwAssertArgType>(SIZE));
-  return this->elements[i];
-}
-
-LargeSize& LargeSize ::
-  operator=(const LargeSize& obj)
-{
-  if (this != &obj) {
-    for (FwSizeType index = 0; index < SIZE; index++) {
-      this->elements[index] = obj.elements[index];
-    }
-  }
-  return *this;
-}
-
-LargeSize& LargeSize ::
-  operator=(const ElementType (&a)[SIZE])
-{
-  for (FwSizeType index = 0; index < SIZE; index++) {
-    this->elements[index] = a[index];
-  }
-  return *this;
-}
-
-LargeSize& LargeSize ::
-  operator=(const std::initializer_list<ElementType>& il)
-{
-  // Check that the initializer has the expected size
-  FW_ASSERT(il.size() == SIZE, static_cast<FwAssertArgType>(il.size()), static_cast<FwAssertArgType>(SIZE));
-  FwSizeType i = 0;
-  for (const auto& e : il) {
-    FW_ASSERT(i < SIZE, static_cast<FwAssertArgType>(i), static_cast<FwAssertArgType>(SIZE));
-    this->elements[i] = e;
-    i++;
-  }
-  return *this;
-}
-
-LargeSize& LargeSize ::
-  operator=(const ElementType& e)
-{
-  for (FwSizeType index = 0; index < SIZE; index++) {
-    this->elements[index] = e;
-  }
-  return *this;
 }
 
 bool LargeSize ::

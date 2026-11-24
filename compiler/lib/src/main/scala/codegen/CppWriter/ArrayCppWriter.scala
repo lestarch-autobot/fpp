@@ -34,6 +34,8 @@ case class ArrayCppWriter (
 
   private val hasStringEltType= s.isStringType(eltType)
 
+  private val isLiteralType = s.isLiteralType(arrayType)
+
   private val constructorEltType = if hasStringEltType then "Fw::StringBase" else "ElementType"
 
   private val initializerListEltType = if hasStringEltType then "Fw::String" else constructorEltType
@@ -85,11 +87,15 @@ case class ArrayCppWriter (
       "initializer_list"
     ).map(CppWriter.systemHeaderString).map(line)
     val userHeaders = {
-      val standardHeaders = List(
-        "Fw/FPrimeBasicTypes.hpp",
-        "Fw/Types/ExternalString.hpp",
-        "Fw/Types/Serializable.hpp",
-        "Fw/Types/String.hpp"
+      val standardHeaders = List.concat(
+        List(
+          "Fw/FPrimeBasicTypes.hpp",
+          "Fw/Types/ExternalString.hpp",
+          "Fw/Types/Serializable.hpp",
+          "Fw/Types/String.hpp"
+        ),
+        // The constexpr functions defined in the header use FW_ASSERT
+        guardedList (isLiteralType) (List("Fw/Types/Assert.hpp"))
       ).map(CppWriter.headerString)
       val symbolHeaders = writeIncludeDirectives(s, aNode)
       (standardHeaders ++ symbolHeaders).sorted.map(line)
@@ -254,7 +260,8 @@ case class ArrayCppWriter (
       )
     )
 
-    List.concat(
+    if isLiteralType then getConstexprConstructorMembers
+    else List.concat(
       List(
         linesClassMember(
           CppDocHppWriter.writeAccessTag("public")
@@ -272,156 +279,310 @@ case class ArrayCppWriter (
     )
   }
 
-  private def getOperatorMembers: List[CppDoc.Class.Member] =
+  private val constexprInitializers = List("Serializable()", "elements()")
+
+  private val primitiveArrayParam = CppDoc.Function.Param(
+    CppDoc.Type("const ElementType"),
+    "(&a)[SIZE]",
+    Some("The array"),
+  )
+
+  private val singleElementParam = CppDoc.Function.Param(
+    CppDoc.Type("const ElementType&"),
+    "e",
+    Some("The element"),
+  )
+
+  private val initializerListParam = CppDoc.Function.Param(
+    CppDoc.Type("const std::initializer_list<ElementType>&"),
+    "il",
+    Some("The initializer list"),
+  )
+
+  private val objParam = CppDoc.Function.Param(
+    CppDoc.Type(s"const $name&"),
+    "obj",
+    Some("The source object"),
+  )
+
+  // Constructors for literal types
+  private def getConstexprConstructorMembers: List[CppDoc.Class.Member] =
     List(
       linesClassMember(
-        CppDocHppWriter.writeAccessTag("public")
+        CppDocHppWriter.writeAccessTag("public") ++
+        CppDocWriter.writeBannerComment("Constructors")
       ),
-      linesClassMember(
-        CppDocWriter.writeBannerComment("Operators"),
-        CppDoc.Lines.Both,
+      constexprClassMember(
+        "Constructor (default value)",
+        "",
+        name,
+        Nil,
+        constexprInitializers,
+        guardedList (!defaultElementInitialization) ({
+          val valueString = ValueCppWriter.write(s, arrayType.getDefaultValue.get)
+          lines(s"*this = $valueString;")
+        })
       ),
-      functionClassMember(
-        Some("Subscript operator"),
+      constexprClassMember(
+        "Constructor (primitive array)",
+        "",
+        name,
+        List(primitiveArrayParam),
+        constexprInitializers,
+        lines("*this = a;")
+      ),
+      constexprClassMember(
+        "Constructor (single element)",
+        "explicit ",
+        name,
+        List(singleElementParam),
+        constexprInitializers,
+        lines("*this = e;")
+      ),
+      constexprClassMember(
+        "Constructor (initializer list)",
+        "",
+        name,
+        List(initializerListParam),
+        constexprInitializers,
+        lines("*this = il;")
+      ),
+      constexprClassMember(
+        "Copy constructor",
+        "",
+        name,
+        List(objParam),
+        constexprInitializers,
+        lines("*this = obj;")
+      )
+    )
+
+  // Operators for literal types that are used in constant expressions
+  private def getConstexprOperatorMembers: List[CppDoc.Class.Member] =
+    List(
+      constexprClassMember(
+        "Const subscript operator",
+        "const ElementType& ",
         "operator[]",
         List(
           CppDoc.Function.Param(
             CppDoc.Type("const FwSizeType"),
             "i",
             Some("The subscript index"),
-          ),
+          )
         ),
-        CppDoc.Type("ElementType&", Some(s"$name::ElementType&")),
+        Nil,
         List(
           line("FW_ASSERT(i < SIZE, static_cast<FwAssertArgType>(i), static_cast<FwAssertArgType>(SIZE));"),
           line("return this->elements[i];"),
         ),
+        CppDoc.Function.Const
       ),
-      functionClassMember(
-        Some("Const subscript operator"),
-        "operator[]",
-        List(
-          CppDoc.Function.Param(
-            CppDoc.Type("const FwSizeType"),
-            "i",
-            Some("The subscript index"),
-          ),
-        ),
-        CppDoc.Type("const ElementType&", Some(s"const $name::ElementType&")),
-        List(
-          line("FW_ASSERT(i < SIZE, static_cast<FwAssertArgType>(i), static_cast<FwAssertArgType>(SIZE));"),
-          line("return this->elements[i];"),
-        ),
-        CppDoc.Function.NonSV,
-        CppDoc.Function.Const,
-      ),
-      functionClassMember(
-        Some("Copy assignment operator (object)"),
+      constexprClassMember(
+        "Copy assignment operator (object)",
+        s"$name& ",
         "operator=",
-        List(
-          CppDoc.Function.Param(
-            CppDoc.Type(s"const $name&"),
-            "obj",
-            Some("The source object"),
-          ),
-        ),
-        CppDoc.Type(s"$name&"),
+        List(objParam),
+        Nil,
+        // There is no self-assignment check, because comparing the
+        // addresses is not allowed in all constant expressions
         List.concat(
-          wrapInIf(
-            "this != &obj",
-            indexIterator(lines("this->elements[index] = obj.elements[index];")),
-          ),
+          indexIterator(lines("this->elements[index] = obj.elements[index];")),
           lines("return *this;"),
-        ),
+        )
       ),
-      functionClassMember(
-        Some("Copy assignment operator (primitive array)"),
+      constexprClassMember(
+        "Copy assignment operator (primitive array)",
+        s"$name& ",
         "operator=",
-        List(
-          CppDoc.Function.Param(
-            CppDoc.Type(s"const ElementType"),
-            "(&a)[SIZE]",
-            Some("The source array"),
-          ),
-        ),
-        CppDoc.Type(s"$name&"),
+        List(primitiveArrayParam.copy(comment = Some("The source array"))),
+        Nil,
         List.concat(
           indexIterator(lines("this->elements[index] = a[index];")),
           lines("return *this;"),
         )
       ),
-      functionClassMember(
-        Some("Copy assignment operator (initializer list)"),
+      constexprClassMember(
+        "Copy assignment operator (initializer list)",
+        s"$name& ",
         "operator=",
-        List(
-          CppDoc.Function.Param(
-            CppDoc.Type(s"const std::initializer_list<$initializerListEltType>&"),
-            "il",
-            Some("The initializer list"),
-          ),
-        ),
-        CppDoc.Type(s"$name&"),
-        lines("""|// Check that the initializer has the expected size
-                 |FW_ASSERT(il.size() == SIZE, static_cast<FwAssertArgType>(il.size()), static_cast<FwAssertArgType>(SIZE));
-                 |FwSizeType i = 0;
-                 |for (const auto& e : il) {
-                 |  FW_ASSERT(i < SIZE, static_cast<FwAssertArgType>(i), static_cast<FwAssertArgType>(SIZE));
-                 |  this->elements[i] = e;
-                 |  i++;
-                 |}
-                 |return *this;""")
+        List(initializerListParam),
+        Nil,
+        initializerListAssignmentBody
       ),
-      functionClassMember(
-        Some("Copy assignment operator (single element)"),
+      constexprClassMember(
+        "Copy assignment operator (single element)",
+        s"$name& ",
         "operator=",
-        List(
-          CppDoc.Function.Param(
-            CppDoc.Type(s"const ElementType&"),
-            "e",
-            Some("The element"),
-          ),
-        ),
-        CppDoc.Type(s"$name&"),
+        List(singleElementParam),
+        Nil,
         List.concat(
           indexIterator(lines("this->elements[index] = e;")),
           lines("return *this;"),
         )
+      )
+    )
+
+  private val initializerListAssignmentBody =
+    lines("""|// Check that the initializer has the expected size
+             |FW_ASSERT(il.size() == SIZE, static_cast<FwAssertArgType>(il.size()), static_cast<FwAssertArgType>(SIZE));
+             |FwSizeType i = 0;
+             |for (const auto& e : il) {
+             |  FW_ASSERT(i < SIZE, static_cast<FwAssertArgType>(i), static_cast<FwAssertArgType>(SIZE));
+             |  this->elements[i] = e;
+             |  i++;
+             |}
+             |return *this;""")
+
+  private def getOperatorMembers: List[CppDoc.Class.Member] =
+    List.concat(
+      List(
+        linesClassMember(
+          CppDocHppWriter.writeAccessTag("public")
+        ),
+        linesClassMember(
+          CppDocWriter.writeBannerComment("Operators"),
+          CppDoc.Lines.Both,
+        ),
+        functionClassMember(
+          Some("Subscript operator"),
+          "operator[]",
+          List(
+            CppDoc.Function.Param(
+              CppDoc.Type("const FwSizeType"),
+              "i",
+              Some("The subscript index"),
+            ),
+          ),
+          CppDoc.Type("ElementType&", Some(s"$name::ElementType&")),
+          List(
+            line("FW_ASSERT(i < SIZE, static_cast<FwAssertArgType>(i), static_cast<FwAssertArgType>(SIZE));"),
+            line("return this->elements[i];"),
+          ),
+        )
       ),
-      functionClassMember(
-        Some("Equality operator"),
-        "operator==",
-        List(
-          CppDoc.Function.Param(
-            CppDoc.Type(s"const $name&"),
-            "obj",
-            Some("The other object"),
+      guardedList (!isLiteralType) (List(
+        functionClassMember(
+          Some("Const subscript operator"),
+          "operator[]",
+          List(
+            CppDoc.Function.Param(
+              CppDoc.Type("const FwSizeType"),
+              "i",
+              Some("The subscript index"),
+            ),
+          ),
+          CppDoc.Type("const ElementType&", Some(s"const $name::ElementType&")),
+          List(
+            line("FW_ASSERT(i < SIZE, static_cast<FwAssertArgType>(i), static_cast<FwAssertArgType>(SIZE));"),
+            line("return this->elements[i];"),
+          ),
+          CppDoc.Function.NonSV,
+          CppDoc.Function.Const,
+        ),
+        functionClassMember(
+          Some("Copy assignment operator (object)"),
+          "operator=",
+          List(
+            CppDoc.Function.Param(
+              CppDoc.Type(s"const $name&"),
+              "obj",
+              Some("The source object"),
+            ),
+          ),
+          CppDoc.Type(s"$name&"),
+          List.concat(
+            wrapInIf(
+              "this != &obj",
+              indexIterator(lines("this->elements[index] = obj.elements[index];")),
+            ),
+            lines("return *this;"),
           ),
         ),
-        CppDoc.Type("bool"),
-        List.concat(
-          indexIterator(wrapInIf(
-            "!((*this)[index] == obj[index])",
-            lines("return false;"),
-          )),
-          lines("return true;"),
-        ),
-        CppDoc.Function.NonSV,
-        CppDoc.Function.Const,
-      ),
-      functionClassMember(
-        Some("Inequality operator"),
-        "operator!=",
-        List(
-          CppDoc.Function.Param(
-            CppDoc.Type(s"const $name&"),
-            "obj",
-            Some("The other object"),
+        functionClassMember(
+          Some("Copy assignment operator (primitive array)"),
+          "operator=",
+          List(
+            CppDoc.Function.Param(
+              CppDoc.Type(s"const ElementType"),
+              "(&a)[SIZE]",
+              Some("The source array"),
+            ),
           ),
+          CppDoc.Type(s"$name&"),
+          List.concat(
+            indexIterator(lines("this->elements[index] = a[index];")),
+            lines("return *this;"),
+          )
         ),
-        CppDoc.Type("bool"),
-        lines("return !(*this == obj);"),
-        CppDoc.Function.NonSV,
-        CppDoc.Function.Const,
+        functionClassMember(
+          Some("Copy assignment operator (initializer list)"),
+          "operator=",
+          List(
+            CppDoc.Function.Param(
+              CppDoc.Type(s"const std::initializer_list<$initializerListEltType>&"),
+              "il",
+              Some("The initializer list"),
+            ),
+          ),
+          CppDoc.Type(s"$name&"),
+          initializerListAssignmentBody
+        ),
+        functionClassMember(
+          Some("Copy assignment operator (single element)"),
+          "operator=",
+          List(
+            CppDoc.Function.Param(
+              CppDoc.Type(s"const ElementType&"),
+              "e",
+              Some("The element"),
+            ),
+          ),
+          CppDoc.Type(s"$name&"),
+          List.concat(
+            indexIterator(lines("this->elements[index] = e;")),
+            lines("return *this;"),
+          )
+        )
+      )),
+      guardedList (isLiteralType) (getConstexprOperatorMembers),
+      List(
+        functionClassMember(
+          Some("Equality operator"),
+          "operator==",
+          List(
+            CppDoc.Function.Param(
+              CppDoc.Type(s"const $name&"),
+              "obj",
+              Some("The other object"),
+            ),
+          ),
+          CppDoc.Type("bool"),
+          List.concat(
+            indexIterator(wrapInIf(
+              "!((*this)[index] == obj[index])",
+              lines("return false;"),
+            )),
+            lines("return true;"),
+          ),
+          CppDoc.Function.NonSV,
+          CppDoc.Function.Const,
+        ),
+        functionClassMember(
+          Some("Inequality operator"),
+          "operator!=",
+          List(
+            CppDoc.Function.Param(
+              CppDoc.Type(s"const $name&"),
+              "obj",
+              Some("The other object"),
+            ),
+          ),
+          CppDoc.Type("bool"),
+          lines("return !(*this == obj);"),
+          CppDoc.Function.NonSV,
+          CppDoc.Function.Const,
+        )
       )
     ) ++ writeOstreamOperator(
       name,

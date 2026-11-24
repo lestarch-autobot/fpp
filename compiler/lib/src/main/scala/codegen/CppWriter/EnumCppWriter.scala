@@ -184,35 +184,40 @@ case class EnumCppWriter(
           lines(
             s"""|
                 |//! Constructor (default value of $defaultValue)
-                |$name()
+                |constexpr $name() :
+                |  Serializable(),
+                |  e($defaultValue)
                 |{
-                |  this->e = $defaultValue;
+                |
                 |}
                 |
                 |//! Constructor (user-provided value)
-                |$name(
+                |constexpr $name(
                 |    const enum T e1 //!< The raw enum value
-                |)
+                |) :
+                |  Serializable(),
+                |  e(e1)
                 |{
                 |  FW_ASSERT(isValid(e1), static_cast<FwAssertArgType>(e1));
-                |  this->e = e1;
                 |}
                 |
                 |//! Constructor (serial representation value)
-                |$name(
+                |constexpr $name(
                 |    const SerialType e1 //!< The serial representation value
-                |)
+                |) :
+                |  Serializable(),
+                |  e(static_cast<enum T>(e1))
                 |{
                 |  FW_ASSERT(isValid(e1), static_cast<FwAssertArgType>(e1));
-                |  this->e = static_cast<enum T>(e1);
                 |}
                 |
                 |//! Copy constructor
-                |$name(
+                |constexpr $name(
                 |    const $name& obj //!< The source object
-                |)
+                |) :
+                |  Serializable(),
+                |  e(obj.e)
                 |{
-                |  this->e = obj.e;
                 |#ifdef BUILD_UT
                 |this->m_serializeValueIsSet = obj.m_serializeValueIsSet;
                 |this->m_serializeValue = obj.m_serializeValue;
@@ -233,85 +238,68 @@ case class EnumCppWriter(
         CppDocWriter.writeBannerComment("Operators"),
         CppDoc.Lines.Both
       ),
-      functionClassMember(
-        Some(s"Copy assignment operator (object)"),
-        "operator=",
-        List(
-          CppDoc.Function.Param(
-            CppDoc.Type(s"const $name&"),
-            "obj",
-            Some("The source object"),
-          ),
-        ),
-        CppDoc.Type(s"$name&"),
+      linesClassMember(
         lines(
-          """|this->e = obj.e;
-             |#ifdef BUILD_UT
-             |this->m_serializeValueIsSet = obj.m_serializeValueIsSet;
-             |this->m_serializeValue = obj.m_serializeValue;
-             |#endif
-             |return *this;"""
-        )
-      ),
-      functionClassMember(
-        Some(s"Assignment operator (serial representation value)"),
-        "operator=",
-        List(
-          CppDoc.Function.Param(
-            CppDoc.Type("SerialType"),
-            "e1",
-            Some("The serial representation value"),
-          ),
-        ),
-        CppDoc.Type(s"$name&"),
-        lines(
-          """|FW_ASSERT(isValid(e1), static_cast<FwAssertArgType>(e1));
-             |this->e = static_cast<enum T>(e1);
-             |#ifdef BUILD_UT
-             |this->m_serializeValueIsSet = false;
-             |this->m_serializeValue = 0;
-             |#endif
-             |return *this;"""
-        )
-      ),
-      functionClassMember(
-        Some(s"Copy assignment operator (raw enum)"),
-        "operator=",
-        List(
-          CppDoc.Function.Param(
-            CppDoc.Type("enum T"),
-            "e1",
-            Some("The enum value"),
-          ),
-        ),
-        CppDoc.Type(s"$name&"),
-        lines(
-          """|FW_ASSERT(isValid(e1), static_cast<FwAssertArgType>(e1));
-             |this->e = e1;
-             |#ifdef BUILD_UT
-             |this->m_serializeValueIsSet = false;
-             |this->m_serializeValue = 0;
-             |#endif
-             |return *this;"""
+          s"""|
+              |//! Copy assignment operator (object)
+              |constexpr $name& operator=(
+              |    const $name& obj //!< The source object
+              |)
+              |{
+              |  this->e = obj.e;
+              |#ifdef BUILD_UT
+              |this->m_serializeValueIsSet = obj.m_serializeValueIsSet;
+              |this->m_serializeValue = obj.m_serializeValue;
+              |#endif
+              |  return *this;
+              |}
+              |
+              |//! Assignment operator (serial representation value)
+              |constexpr $name& operator=(
+              |    SerialType e1 //!< The serial representation value
+              |)
+              |{
+              |  FW_ASSERT(isValid(e1), static_cast<FwAssertArgType>(e1));
+              |  this->e = static_cast<enum T>(e1);
+              |#ifdef BUILD_UT
+              |this->m_serializeValueIsSet = false;
+              |this->m_serializeValue = 0;
+              |#endif
+              |  return *this;
+              |}
+              |
+              |//! Copy assignment operator (raw enum)
+              |constexpr $name& operator=(
+              |    enum T e1 //!< The enum value
+              |)
+              |{
+              |  FW_ASSERT(isValid(e1), static_cast<FwAssertArgType>(e1));
+              |  this->e = e1;
+              |#ifdef BUILD_UT
+              |this->m_serializeValueIsSet = false;
+              |this->m_serializeValue = 0;
+              |#endif
+              |  return *this;
+              |}"""
         )
       ),
       linesClassMember(
         lines(
           """|
              |//! Conversion operator
-             |operator enum T() const
+             |constexpr operator enum T() const
              |{
              |  return this->e;
              |}
              |
              |//! Equality operator
-             |bool operator==(enum T e1) const
+             |constexpr bool operator==(enum T e1) const
              |{
              |  return this->e == e1;
              |}
              |
              |//! Inequality operator
-             |bool operator!=(enum T e1) const
+             |constexpr bool operator!=(enum T e1) const
              |{
              |  return !(*this == e1);
              |}"""
@@ -490,27 +478,28 @@ case class EnumCppWriter(
       addAccessTagAndComment(
         "public",
         "Static functions",
-        List(getIsValidFunction)
+        List(getIsValidFunction),
+        CppDoc.Lines.Hpp
       )
 
     private def getIsValidFunction =
-      functionClassMember(
-        Some(s"Check serial type value for validity"),
-        "isValid",
-        List(
-          CppDoc.Function.Param(
-            CppDoc.Type("SerialType"),
-            "serialTypeValue",
-            Some("The serial type value")
-          )
-        ),
-        CppDoc.Type("bool"),
-        Line.addPrefixAndSuffix(
-          "return ",
-          writeIntervals("serialTypeValue", intervals),
-          ";"
-        ),
-        CppDoc.Function.Static
+      linesClassMember(
+        List.concat(
+          lines(
+            """|
+               |//! Check serial type value for validity
+               |static constexpr bool isValid(
+               |    SerialType serialTypeValue //!< The serial type value
+               |)
+               |{"""
+          ),
+          Line.addPrefixAndSuffix(
+            "return ",
+            writeIntervals("serialTypeValue", intervals),
+            ";"
+          ).map(indentIn),
+          lines("}")
+        )
       )
 
   }

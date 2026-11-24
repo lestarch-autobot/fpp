@@ -10,46 +10,6 @@
 namespace M {
 
   // ----------------------------------------------------------------------
-  // Constructors
-  // ----------------------------------------------------------------------
-
-  PrimitiveI32 ::
-    PrimitiveI32() :
-      Serializable(),
-      elements()
-  {
-
-  }
-
-  PrimitiveI32 ::
-    PrimitiveI32(const ElementType (&a)[SIZE]) :
-      Serializable()
-  {
-    *this = a;
-  }
-
-  PrimitiveI32 ::
-    PrimitiveI32(const ElementType& e) :
-      Serializable()
-  {
-    *this = e;
-  }
-
-  PrimitiveI32 ::
-    PrimitiveI32(const std::initializer_list<ElementType>& il) :
-      Serializable()
-  {
-    *this = il;
-  }
-
-  PrimitiveI32 ::
-    PrimitiveI32(const PrimitiveI32& obj) :
-      Serializable()
-  {
-    *this = obj;
-  }
-
-  // ----------------------------------------------------------------------
   // Operators
   // ----------------------------------------------------------------------
 
@@ -58,56 +18,6 @@ namespace M {
   {
     FW_ASSERT(i < SIZE, static_cast<FwAssertArgType>(i), static_cast<FwAssertArgType>(SIZE));
     return this->elements[i];
-  }
-
-  const PrimitiveI32::ElementType& PrimitiveI32 ::
-    operator[](const FwSizeType i) const
-  {
-    FW_ASSERT(i < SIZE, static_cast<FwAssertArgType>(i), static_cast<FwAssertArgType>(SIZE));
-    return this->elements[i];
-  }
-
-  PrimitiveI32& PrimitiveI32 ::
-    operator=(const PrimitiveI32& obj)
-  {
-    if (this != &obj) {
-      for (FwSizeType index = 0; index < SIZE; index++) {
-        this->elements[index] = obj.elements[index];
-      }
-    }
-    return *this;
-  }
-
-  PrimitiveI32& PrimitiveI32 ::
-    operator=(const ElementType (&a)[SIZE])
-  {
-    for (FwSizeType index = 0; index < SIZE; index++) {
-      this->elements[index] = a[index];
-    }
-    return *this;
-  }
-
-  PrimitiveI32& PrimitiveI32 ::
-    operator=(const std::initializer_list<ElementType>& il)
-  {
-    // Check that the initializer has the expected size
-    FW_ASSERT(il.size() == SIZE, static_cast<FwAssertArgType>(il.size()), static_cast<FwAssertArgType>(SIZE));
-    FwSizeType i = 0;
-    for (const auto& e : il) {
-      FW_ASSERT(i < SIZE, static_cast<FwAssertArgType>(i), static_cast<FwAssertArgType>(SIZE));
-      this->elements[i] = e;
-      i++;
-    }
-    return *this;
-  }
-
-  PrimitiveI32& PrimitiveI32 ::
-    operator=(const ElementType& e)
-  {
-    for (FwSizeType index = 0; index < SIZE; index++) {
-      this->elements[index] = e;
-    }
-    return *this;
   }
 
   bool PrimitiveI32 ::

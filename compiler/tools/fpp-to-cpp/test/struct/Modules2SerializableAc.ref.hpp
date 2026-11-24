@@ -38,15 +38,29 @@ namespace M {
       // ----------------------------------------------------------------------
 
       //! Constructor (default value)
-      Modules2();
+      constexpr Modules2() :
+        Serializable(),
+        m_x()
+      {
+      }
 
       //! Member constructor
-      Modules2(const M::Modules1& x);
+      constexpr Modules2(
+          const M::Modules1& x
+      ) :
+        Serializable(),
+        m_x(x)
+      {
+      }
 
       //! Copy constructor
-      Modules2(
+      constexpr Modules2(
           const Modules2& obj //!< The source object
-      );
+      ) :
+        Serializable(),
+        m_x(obj.m_x)
+      {
+      }
 
     public:
 
@@ -55,9 +69,13 @@ namespace M {
       // ----------------------------------------------------------------------
 
       //! Copy assignment operator
-      Modules2& operator=(
+      constexpr Modules2& operator=(
           const Modules2& obj //!< The source object
-      );
+      )
+      {
+        set(obj.m_x);
+        return *this;
+      }
 
       //! Equality operator
       bool operator==(
@@ -120,7 +138,7 @@ namespace M {
       }
 
       //! Get member x (const)
-      const M::Modules1& get_x() const
+      constexpr const M::Modules1& get_x() const
       {
         return this->m_x;
       }
@@ -130,7 +148,12 @@ namespace M {
       // ----------------------------------------------------------------------
 
       //! Set all members
-      void set(const M::Modules1& x);
+      constexpr void set(
+          const M::Modules1& x
+      )
+      {
+        this->m_x = x;
+      }
 
       //! Set member x
       void set_x(const M::Modules1& x);

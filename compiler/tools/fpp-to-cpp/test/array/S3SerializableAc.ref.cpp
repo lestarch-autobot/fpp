@@ -10,68 +10,8 @@
 namespace S {
 
   // ----------------------------------------------------------------------
-  // Constructors
-  // ----------------------------------------------------------------------
-
-  S3 ::
-    S3() :
-      Serializable(),
-      m_mU32Array(),
-      m_mF64()
-  {
-
-  }
-
-  S3 ::
-    S3(
-        const Type_of_mU32Array& mU32Array,
-        F64 mF64
-    ) :
-      Serializable(),
-      m_mF64(mF64)
-  {
-    for (FwSizeType i = 0; i < 3; i++) {
-      this->m_mU32Array[i] = mU32Array[i];
-    }
-  }
-
-  S3 ::
-    S3(const S3& obj) :
-      Serializable(),
-      m_mF64(obj.m_mF64)
-  {
-    for (FwSizeType i = 0; i < 3; i++) {
-      this->m_mU32Array[i] = obj.m_mU32Array[i];
-    }
-  }
-
-  S3 ::
-    S3(
-        U32 mU32Array,
-        F64 mF64
-    ) :
-      Serializable(),
-      m_mF64(mF64)
-  {
-    for (FwSizeType i = 0; i < 3; i++) {
-      this->m_mU32Array[i] = mU32Array;
-    }
-  }
-
-  // ----------------------------------------------------------------------
   // Operators
   // ----------------------------------------------------------------------
-
-  S3& S3 ::
-    operator=(const S3& obj)
-  {
-    if (this == &obj) {
-      return *this;
-    }
-
-    set(obj.m_mU32Array, obj.m_mF64);
-    return *this;
-  }
 
   bool S3 ::
     operator==(const S3& obj) const
@@ -200,19 +140,6 @@ namespace S {
   // ----------------------------------------------------------------------
   // Setter functions
   // ----------------------------------------------------------------------
-
-  void S3 ::
-    set(
-        const Type_of_mU32Array& mU32Array,
-        F64 mF64
-    )
-  {
-    this->m_mF64 = mF64;
-
-    for (FwSizeType i = 0; i < 3; i++) {
-      this->m_mU32Array[i] = mU32Array[i];
-    }
-  }
 
   void S3 ::
     set_mU32Array(const Type_of_mU32Array& mU32Array)

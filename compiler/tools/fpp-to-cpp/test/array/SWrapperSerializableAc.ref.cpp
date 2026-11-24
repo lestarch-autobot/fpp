@@ -8,47 +8,8 @@
 #include "SWrapperSerializableAc.hpp"
 
 // ----------------------------------------------------------------------
-// Constructors
-// ----------------------------------------------------------------------
-
-SWrapper ::
-  SWrapper() :
-    Serializable(),
-    m_s()
-{
-
-}
-
-SWrapper ::
-  SWrapper(const SDefault& s) :
-    Serializable(),
-    m_s(s)
-{
-
-}
-
-SWrapper ::
-  SWrapper(const SWrapper& obj) :
-    Serializable(),
-    m_s(obj.m_s)
-{
-
-}
-
-// ----------------------------------------------------------------------
 // Operators
 // ----------------------------------------------------------------------
-
-SWrapper& SWrapper ::
-  operator=(const SWrapper& obj)
-{
-  if (this == &obj) {
-    return *this;
-  }
-
-  set(obj.m_s);
-  return *this;
-}
 
 bool SWrapper ::
   operator==(const SWrapper& obj) const
@@ -137,12 +98,6 @@ void SWrapper ::
 // ----------------------------------------------------------------------
 // Setter functions
 // ----------------------------------------------------------------------
-
-void SWrapper ::
-  set(const SDefault& s)
-{
-  this->m_s = s;
-}
 
 void SWrapper ::
   set_s(const SDefault& s)

@@ -74,6 +74,8 @@ case class StructCppWriter(
   private val initializerListMemberNames = memberNames.filter((name) =>
       defaultMemberNames.contains(name) || !sizes.contains(name))
 
+  private val isLiteralType = s.isLiteralType(structType)
+
   // Writes a for loop that iterates n times
   private def iterateN(n: Int, ll: List[Line]) =
     wrapInForLoop(
@@ -100,18 +102,49 @@ case class StructCppWriter(
 
   private def defaultValueMembers = defaultValue.get.members
 
-  private def getAllSetterFunctionMember =
-    functionClassMember(
+  private def getAllSetterFunctionMember = {
+    val body = List.concat(
+      nonArrayMemberNames.map(n => line(s"this->m_$n = $n;")),
+      if arrayMemberNames.isEmpty then Nil
+      else Line.blank :: writeArraySetters(n => s"$n[i]"),
+    )
+    if isLiteralType then constexprClassMember(
+      "Set all members",
+      "void ",
+      "set",
+      memberList.map(writeMemberAsParam),
+      Nil,
+      body
+    )
+    else functionClassMember(
       Some("Set all members"),
       "set",
       memberList.map(writeMemberAsParam),
       CppDoc.Type("void"),
-      List.concat(
-        nonArrayMemberNames.map(n => line(s"this->m_$n = $n;")),
-        if arrayMemberNames.isEmpty then Nil
-        else Line.blank :: writeArraySetters(n => s"$n[i]"),
-      )
+      body
     )
+  }
+
+  // Writes a constructor. For literal types, the constructor is constexpr.
+  private def writeConstructor(
+    comment: String,
+    params: List[CppDoc.Function.Param],
+    initializers: List[String],
+    body: List[Line]
+  ) =
+    if isLiteralType then constexprClassMember(
+      comment,
+      "",
+      structName,
+      params,
+      // A constexpr constructor must initialize every member
+      "Serializable()" :: memberNames.map(n => {
+        val prefix = s"m_$n("
+        initializers.find(_.startsWith(prefix)).getOrElse(s"$prefix)")
+      }),
+      body
+    )
+    else constructorClassMember(Some(comment), params, initializers, body)
 
   private def getClassMembers: List[CppDoc.Class.Member] =
     List.concat(
@@ -143,38 +176,55 @@ case class StructCppWriter(
         // Write the scalar array constructor if and only if there are
         // array members
         guardedList (!sizes.isEmpty) (List(getScalarArrayConstructor))
-      )
+      ),
+      if isLiteralType then CppDoc.Lines.Hpp else CppDoc.Lines.Both
     )
   }
 
-  private def getCopyAssignmentOperator =
-    functionClassMember(
-      Some("Copy assignment operator"),
-      "operator=",
-      List(
-        CppDoc.Function.Param(
-          CppDoc.Type(s"const $structName&"),
-          "obj",
-          Some("The source object")
-        ),
+  private def getCopyAssignmentOperator = {
+    val params = List(
+      CppDoc.Function.Param(
+        CppDoc.Type(s"const $structName&"),
+        "obj",
+        Some("The source object")
       ),
-      CppDoc.Type(s"$structName&"),
+    )
+    val setLines = lines(
+      s"set(${memberNames.map(n => s"obj.m_$n").mkString(", ")});"
+    )
+    val body =
       if memberList.isEmpty
       then lines (
         """|(void) obj;
            |return *this;"""
       )
+      // For literal types there is no self-assignment check, because
+      // comparing the addresses is not allowed in all constant expressions
+      else if isLiteralType then setLines ++ lines("return *this;")
       else List.concat(
         wrapInIf("this == &obj", lines("return *this;")),
-        Line.blank :: lines(
-          s"set(${memberNames.map(n => s"obj.m_$n").mkString(", ")});"
-        ),
+        Line.blank :: setLines,
         lines("return *this;"),
       )
+    if isLiteralType then constexprClassMember(
+      "Copy assignment operator",
+      s"$structName& ",
+      "operator=",
+      params,
+      Nil,
+      body
     )
+    else functionClassMember(
+      Some("Copy assignment operator"),
+      "operator=",
+      params,
+      CppDoc.Type(s"$structName&"),
+      body
+    )
+  }
 
-  private def getCopyConstructor = constructorClassMember(
-    Some("Copy constructor"),
+  private def getCopyConstructor = writeConstructor(
+    "Copy constructor",
     List(
       CppDoc.Function.Param(
         CppDoc.Type(s"const $structName&"),
@@ -198,8 +248,8 @@ case class StructCppWriter(
   }
 
   private def getDefaultValueConstructor =
-    constructorClassMember(
-      Some("Constructor (default value)"),
+    writeConstructor(
+      "Constructor (default value)",
       Nil,
       "Serializable()" :: initializerListMemberNames.map(n => {
         if defaultMemberNames.contains(n) then s"m_$n()"
@@ -314,8 +364,8 @@ case class StructCppWriter(
     )
 
   private def getMemberConstructor =
-    constructorClassMember(
-      Some("Member constructor"),
+    writeConstructor(
+      "Member constructor",
       memberList.map(writeMemberAsParam),
       writeInitializerList(n => n),
       writeArraySetters(n => s"$n[i]")
@@ -359,8 +409,8 @@ case class StructCppWriter(
     )
 
   private def getScalarArrayConstructor =
-    constructorClassMember(
-      Some("Member constructor (scalar values for arrays)"),
+    writeConstructor(
+      "Member constructor (scalar values for arrays)",
       memberList.map(writeMemberAsParamScalar),
       writeInitializerList(n => n),
       writeArraySetters(n => n)
@@ -525,12 +575,14 @@ case class StructCppWriter(
     line(s"status = buffer.deserializeTo(this->m_$n, mode);") ::
     writeSerializeStatusCheck
 
+  private val constexprPrefix = if isLiteralType then "constexpr " else ""
+
   private def writeEnumGetter(n: String, tn: String) =
     linesClassMember(
       lines(
         s"""|
             |//! Get member $n
-            |${writeMemberAsReturnType((n, tn))} ${getGetterName(n)}() const
+            |$constexprPrefix${writeMemberAsReturnType((n, tn))} ${getGetterName(n)}() const
             |{
             |  return this->m_$n.e;
             |}"""
@@ -608,7 +660,7 @@ case class StructCppWriter(
             |}
             |
             |//! Get member $n (const)
-            |${writeMemberAsReturnType((n, tn), StructCppWriter.Const)} ${getGetterName(n)}() const
+            |$constexprPrefix${writeMemberAsReturnType((n, tn), StructCppWriter.Const)} ${getGetterName(n)}() const
             |{
             |  return this->m_$n;
             |}"""
@@ -620,7 +672,7 @@ case class StructCppWriter(
       lines(
         s"""|
             |//! Get member $n
-            |${writeMemberAsReturnType((n, tn))} ${getGetterName(n)}() const
+            |$constexprPrefix${writeMemberAsReturnType((n, tn))} ${getGetterName(n)}() const
             |{
             |  return this->m_$n;
             |}"""

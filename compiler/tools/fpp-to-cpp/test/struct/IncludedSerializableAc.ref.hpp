@@ -35,15 +35,29 @@ class Included :
     // ----------------------------------------------------------------------
 
     //! Constructor (default value)
-    Included();
+    constexpr Included() :
+      Serializable(),
+      m_x()
+    {
+    }
 
     //! Member constructor
-    Included(U32 x);
+    constexpr Included(
+        U32 x
+    ) :
+      Serializable(),
+      m_x(x)
+    {
+    }
 
     //! Copy constructor
-    Included(
+    constexpr Included(
         const Included& obj //!< The source object
-    );
+    ) :
+      Serializable(),
+      m_x(obj.m_x)
+    {
+    }
 
   public:
 
@@ -52,9 +66,13 @@ class Included :
     // ----------------------------------------------------------------------
 
     //! Copy assignment operator
-    Included& operator=(
+    constexpr Included& operator=(
         const Included& obj //!< The source object
-    );
+    )
+    {
+      set(obj.m_x);
+      return *this;
+    }
 
     //! Equality operator
     bool operator==(
@@ -111,7 +129,7 @@ class Included :
     // ----------------------------------------------------------------------
 
     //! Get member x
-    U32 get_x() const
+    constexpr U32 get_x() const
     {
       return this->m_x;
     }
@@ -121,7 +139,12 @@ class Included :
     // ----------------------------------------------------------------------
 
     //! Set all members
-    void set(U32 x);
+    constexpr void set(
+        U32 x
+    )
+    {
+      this->m_x = x;
+    }
 
     //! Set member x
     void set_x(U32 x);

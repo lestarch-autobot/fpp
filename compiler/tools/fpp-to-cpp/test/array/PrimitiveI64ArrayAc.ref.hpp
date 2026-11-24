@@ -10,6 +10,7 @@
 #include <initializer_list>
 
 #include "Fw/FPrimeBasicTypes.hpp"
+#include "Fw/Types/Assert.hpp"
 #include "Fw/Types/ExternalString.hpp"
 #include "Fw/Types/Serializable.hpp"
 #include "Fw/Types/String.hpp"
@@ -52,27 +53,51 @@ namespace M {
       // ----------------------------------------------------------------------
 
       //! Constructor (default value)
-      PrimitiveI64();
+      constexpr PrimitiveI64() :
+        Serializable(),
+        elements()
+      {
+      }
 
       //! Constructor (primitive array)
-      PrimitiveI64(
+      constexpr PrimitiveI64(
           const ElementType (&a)[SIZE] //!< The array
-      );
+      ) :
+        Serializable(),
+        elements()
+      {
+        *this = a;
+      }
 
       //! Constructor (single element)
-      explicit PrimitiveI64(
+      constexpr explicit PrimitiveI64(
           const ElementType& e //!< The element
-      );
+      ) :
+        Serializable(),
+        elements()
+      {
+        *this = e;
+      }
 
       //! Constructor (initializer list)
-      PrimitiveI64(
+      constexpr PrimitiveI64(
           const std::initializer_list<ElementType>& il //!< The initializer list
-      );
+      ) :
+        Serializable(),
+        elements()
+      {
+        *this = il;
+      }
 
       //! Copy constructor
-      PrimitiveI64(
+      constexpr PrimitiveI64(
           const PrimitiveI64& obj //!< The source object
-      );
+      ) :
+        Serializable(),
+        elements()
+      {
+        *this = obj;
+      }
 
     public:
 
@@ -86,29 +111,62 @@ namespace M {
       );
 
       //! Const subscript operator
-      const ElementType& operator[](
+      constexpr const ElementType& operator[](
           const FwSizeType i //!< The subscript index
-      ) const;
+      ) const
+      {
+        FW_ASSERT(i < SIZE, static_cast<FwAssertArgType>(i), static_cast<FwAssertArgType>(SIZE));
+        return this->elements[i];
+      }
 
       //! Copy assignment operator (object)
-      PrimitiveI64& operator=(
+      constexpr PrimitiveI64& operator=(
           const PrimitiveI64& obj //!< The source object
-      );
+      )
+      {
+        for (FwSizeType index = 0; index < SIZE; index++) {
+          this->elements[index] = obj.elements[index];
+        }
+        return *this;
+      }
 
       //! Copy assignment operator (primitive array)
-      PrimitiveI64& operator=(
+      constexpr PrimitiveI64& operator=(
           const ElementType (&a)[SIZE] //!< The source array
-      );
+      )
+      {
+        for (FwSizeType index = 0; index < SIZE; index++) {
+          this->elements[index] = a[index];
+        }
+        return *this;
+      }
 
       //! Copy assignment operator (initializer list)
-      PrimitiveI64& operator=(
+      constexpr PrimitiveI64& operator=(
           const std::initializer_list<ElementType>& il //!< The initializer list
-      );
+      )
+      {
+        // Check that the initializer has the expected size
+        FW_ASSERT(il.size() == SIZE, static_cast<FwAssertArgType>(il.size()), static_cast<FwAssertArgType>(SIZE));
+        FwSizeType i = 0;
+        for (const auto& e : il) {
+          FW_ASSERT(i < SIZE, static_cast<FwAssertArgType>(i), static_cast<FwAssertArgType>(SIZE));
+          this->elements[i] = e;
+          i++;
+        }
+        return *this;
+      }
 
       //! Copy assignment operator (single element)
-      PrimitiveI64& operator=(
+      constexpr PrimitiveI64& operator=(
           const ElementType& e //!< The element
-      );
+      )
+      {
+        for (FwSizeType index = 0; index < SIZE; index++) {
+          this->elements[index] = e;
+        }
+        return *this;
+      }
 
       //! Equality operator
       bool operator==(

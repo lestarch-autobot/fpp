@@ -8,46 +8,6 @@
 #include "Fw/Types/Assert.hpp"
 
 // ----------------------------------------------------------------------
-// Constructors
-// ----------------------------------------------------------------------
-
-Enum1 ::
-  Enum1() :
-    Serializable(),
-    elements()
-{
-  *this = Enum1({M::E1::X, M::E1::Y});
-}
-
-Enum1 ::
-  Enum1(const ElementType (&a)[SIZE]) :
-    Serializable()
-{
-  *this = a;
-}
-
-Enum1 ::
-  Enum1(const ElementType& e) :
-    Serializable()
-{
-  *this = e;
-}
-
-Enum1 ::
-  Enum1(const std::initializer_list<ElementType>& il) :
-    Serializable()
-{
-  *this = il;
-}
-
-Enum1 ::
-  Enum1(const Enum1& obj) :
-    Serializable()
-{
-  *this = obj;
-}
-
-// ----------------------------------------------------------------------
 // Operators
 // ----------------------------------------------------------------------
 
@@ -56,56 +16,6 @@ Enum1::ElementType& Enum1 ::
 {
   FW_ASSERT(i < SIZE, static_cast<FwAssertArgType>(i), static_cast<FwAssertArgType>(SIZE));
   return this->elements[i];
-}
-
-const Enum1::ElementType& Enum1 ::
-  operator[](const FwSizeType i) const
-{
-  FW_ASSERT(i < SIZE, static_cast<FwAssertArgType>(i), static_cast<FwAssertArgType>(SIZE));
-  return this->elements[i];
-}
-
-Enum1& Enum1 ::
-  operator=(const Enum1& obj)
-{
-  if (this != &obj) {
-    for (FwSizeType index = 0; index < SIZE; index++) {
-      this->elements[index] = obj.elements[index];
-    }
-  }
-  return *this;
-}
-
-Enum1& Enum1 ::
-  operator=(const ElementType (&a)[SIZE])
-{
-  for (FwSizeType index = 0; index < SIZE; index++) {
-    this->elements[index] = a[index];
-  }
-  return *this;
-}
-
-Enum1& Enum1 ::
-  operator=(const std::initializer_list<ElementType>& il)
-{
-  // Check that the initializer has the expected size
-  FW_ASSERT(il.size() == SIZE, static_cast<FwAssertArgType>(il.size()), static_cast<FwAssertArgType>(SIZE));
-  FwSizeType i = 0;
-  for (const auto& e : il) {
-    FW_ASSERT(i < SIZE, static_cast<FwAssertArgType>(i), static_cast<FwAssertArgType>(SIZE));
-    this->elements[i] = e;
-    i++;
-  }
-  return *this;
-}
-
-Enum1& Enum1 ::
-  operator=(const ElementType& e)
-{
-  for (FwSizeType index = 0; index < SIZE; index++) {
-    this->elements[index] = e;
-  }
-  return *this;
 }
 
 bool Enum1 ::

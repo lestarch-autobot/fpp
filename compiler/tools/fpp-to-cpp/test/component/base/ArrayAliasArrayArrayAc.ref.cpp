@@ -8,46 +8,6 @@
 #include "Fw/Types/Assert.hpp"
 
 // ----------------------------------------------------------------------
-// Constructors
-// ----------------------------------------------------------------------
-
-ArrayAliasArray ::
-  ArrayAliasArray() :
-    Serializable(),
-    elements()
-{
-
-}
-
-ArrayAliasArray ::
-  ArrayAliasArray(const ElementType (&a)[SIZE]) :
-    Serializable()
-{
-  *this = a;
-}
-
-ArrayAliasArray ::
-  ArrayAliasArray(const ElementType& e) :
-    Serializable()
-{
-  *this = e;
-}
-
-ArrayAliasArray ::
-  ArrayAliasArray(const std::initializer_list<ElementType>& il) :
-    Serializable()
-{
-  *this = il;
-}
-
-ArrayAliasArray ::
-  ArrayAliasArray(const ArrayAliasArray& obj) :
-    Serializable()
-{
-  *this = obj;
-}
-
-// ----------------------------------------------------------------------
 // Operators
 // ----------------------------------------------------------------------
 
@@ -56,56 +16,6 @@ ArrayAliasArray::ElementType& ArrayAliasArray ::
 {
   FW_ASSERT(i < SIZE, static_cast<FwAssertArgType>(i), static_cast<FwAssertArgType>(SIZE));
   return this->elements[i];
-}
-
-const ArrayAliasArray::ElementType& ArrayAliasArray ::
-  operator[](const FwSizeType i) const
-{
-  FW_ASSERT(i < SIZE, static_cast<FwAssertArgType>(i), static_cast<FwAssertArgType>(SIZE));
-  return this->elements[i];
-}
-
-ArrayAliasArray& ArrayAliasArray ::
-  operator=(const ArrayAliasArray& obj)
-{
-  if (this != &obj) {
-    for (FwSizeType index = 0; index < SIZE; index++) {
-      this->elements[index] = obj.elements[index];
-    }
-  }
-  return *this;
-}
-
-ArrayAliasArray& ArrayAliasArray ::
-  operator=(const ElementType (&a)[SIZE])
-{
-  for (FwSizeType index = 0; index < SIZE; index++) {
-    this->elements[index] = a[index];
-  }
-  return *this;
-}
-
-ArrayAliasArray& ArrayAliasArray ::
-  operator=(const std::initializer_list<ElementType>& il)
-{
-  // Check that the initializer has the expected size
-  FW_ASSERT(il.size() == SIZE, static_cast<FwAssertArgType>(il.size()), static_cast<FwAssertArgType>(SIZE));
-  FwSizeType i = 0;
-  for (const auto& e : il) {
-    FW_ASSERT(i < SIZE, static_cast<FwAssertArgType>(i), static_cast<FwAssertArgType>(SIZE));
-    this->elements[i] = e;
-    i++;
-  }
-  return *this;
-}
-
-ArrayAliasArray& ArrayAliasArray ::
-  operator=(const ElementType& e)
-{
-  for (FwSizeType index = 0; index < SIZE; index++) {
-    this->elements[index] = e;
-  }
-  return *this;
 }
 
 bool ArrayAliasArray ::

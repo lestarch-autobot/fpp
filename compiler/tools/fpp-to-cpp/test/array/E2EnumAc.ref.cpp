@@ -13,41 +13,6 @@
 // Operators
 // ----------------------------------------------------------------------
 
-E2& E2 ::
-  operator=(const E2& obj)
-{
-  this->e = obj.e;
-#ifdef BUILD_UT
-  this->m_serializeValueIsSet = obj.m_serializeValueIsSet;
-  this->m_serializeValue = obj.m_serializeValue;
-#endif
-  return *this;
-}
-
-E2& E2 ::
-  operator=(SerialType e1)
-{
-  FW_ASSERT(isValid(e1), static_cast<FwAssertArgType>(e1));
-  this->e = static_cast<enum T>(e1);
-#ifdef BUILD_UT
-  this->m_serializeValueIsSet = false;
-  this->m_serializeValue = 0;
-#endif
-  return *this;
-}
-
-E2& E2 ::
-  operator=(enum T e1)
-{
-  FW_ASSERT(isValid(e1), static_cast<FwAssertArgType>(e1));
-  this->e = e1;
-#ifdef BUILD_UT
-  this->m_serializeValueIsSet = false;
-  this->m_serializeValue = 0;
-#endif
-  return *this;
-}
-
 #ifdef BUILD_UT
 
 std::ostream& operator<<(std::ostream& os, const E2& obj) {
@@ -142,16 +107,3 @@ void E2 ::
 }
 
 #endif
-
-// ----------------------------------------------------------------------
-// Static functions
-// ----------------------------------------------------------------------
-
-bool E2 ::
-  isValid(SerialType serialTypeValue)
-{
-  return (serialTypeValue == A)
-    || (serialTypeValue == B)
-    || (serialTypeValue == C)
-    || (serialTypeValue == D);
-}

@@ -46,24 +46,53 @@ class Enum :
     // ----------------------------------------------------------------------
 
     //! Constructor (default value)
-    Enum();
+    constexpr Enum() :
+      Serializable(),
+      m_e(),
+      m_eArr()
+    {
+    }
 
     //! Member constructor
-    Enum(
+    constexpr Enum(
         M::E::T e,
         const Type_of_eArr& eArr
-    );
+    ) :
+      Serializable(),
+      m_e(e),
+      m_eArr()
+    {
+      for (FwSizeType i = 0; i < 3; i++) {
+        this->m_eArr[i] = eArr[i];
+      }
+    }
 
     //! Copy constructor
-    Enum(
+    constexpr Enum(
         const Enum& obj //!< The source object
-    );
+    ) :
+      Serializable(),
+      m_e(obj.m_e),
+      m_eArr()
+    {
+      for (FwSizeType i = 0; i < 3; i++) {
+        this->m_eArr[i] = obj.m_eArr[i];
+      }
+    }
 
     //! Member constructor (scalar values for arrays)
-    Enum(
+    constexpr Enum(
         M::E::T e,
         M::E::T eArr
-    );
+    ) :
+      Serializable(),
+      m_e(e),
+      m_eArr()
+    {
+      for (FwSizeType i = 0; i < 3; i++) {
+        this->m_eArr[i] = eArr;
+      }
+    }
 
   public:
 
@@ -72,9 +101,13 @@ class Enum :
     // ----------------------------------------------------------------------
 
     //! Copy assignment operator
-    Enum& operator=(
+    constexpr Enum& operator=(
         const Enum& obj //!< The source object
-    );
+    )
+    {
+      set(obj.m_e, obj.m_eArr);
+      return *this;
+    }
 
     //! Equality operator
     bool operator==(
@@ -131,7 +164,7 @@ class Enum :
     // ----------------------------------------------------------------------
 
     //! Get member e
-    M::E::T get_e() const
+    constexpr M::E::T get_e() const
     {
       return this->m_e.e;
     }
@@ -143,7 +176,7 @@ class Enum :
     }
 
     //! Get member eArr (const)
-    const Type_of_eArr& get_eArr() const
+    constexpr const Type_of_eArr& get_eArr() const
     {
       return this->m_eArr;
     }
@@ -153,10 +186,17 @@ class Enum :
     // ----------------------------------------------------------------------
 
     //! Set all members
-    void set(
+    constexpr void set(
         M::E::T e,
         const Type_of_eArr& eArr
-    );
+    )
+    {
+      this->m_e = e;
+
+      for (FwSizeType i = 0; i < 3; i++) {
+        this->m_eArr[i] = eArr[i];
+      }
+    }
 
     //! Set member e
     void set_e(M::E::T e);

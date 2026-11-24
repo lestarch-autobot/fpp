@@ -230,6 +230,14 @@ case class CppWriterState(
   /** Is t a primitive type (not serializable)? */
   def isPrimitive(t: Type, typeName: String): Boolean  = t.getUnderlyingType.isPrimitive
 
+  /** Is t a literal type in the generated C++? */
+  def isLiteralType(t: Type): Boolean = t.getUnderlyingType match {
+    case _: Type.Enum => true
+    case a: Type.Array => isLiteralType(a.anonArray.eltType)
+    case st: Type.Struct => st.anonStruct.members.values.forall(isLiteralType)
+    case ut => ut.isPrimitive
+  }
+
   /** Is t a string type? */
   def isStringType(t: Type) = t.getUnderlyingType match {
     case _: Type.String => true

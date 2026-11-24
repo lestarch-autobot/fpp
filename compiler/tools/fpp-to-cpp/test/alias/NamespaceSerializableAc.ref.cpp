@@ -8,61 +8,8 @@
 #include "NamespaceSerializableAc.hpp"
 
 // ----------------------------------------------------------------------
-// Constructors
-// ----------------------------------------------------------------------
-
-Namespace ::
-  Namespace() :
-    Serializable(),
-    m_A(),
-    m_B(),
-    m_C(),
-    m_D()
-{
-
-}
-
-Namespace ::
-  Namespace(
-      SimpleCType A,
-      SimpleCType2 B,
-      M::M2::NamespacedAliasType C,
-      M::NamespacedAliasType2 D
-  ) :
-    Serializable(),
-    m_A(A),
-    m_B(B),
-    m_C(C),
-    m_D(D)
-{
-
-}
-
-Namespace ::
-  Namespace(const Namespace& obj) :
-    Serializable(),
-    m_A(obj.m_A),
-    m_B(obj.m_B),
-    m_C(obj.m_C),
-    m_D(obj.m_D)
-{
-
-}
-
-// ----------------------------------------------------------------------
 // Operators
 // ----------------------------------------------------------------------
-
-Namespace& Namespace ::
-  operator=(const Namespace& obj)
-{
-  if (this == &obj) {
-    return *this;
-  }
-
-  set(obj.m_A, obj.m_B, obj.m_C, obj.m_D);
-  return *this;
-}
 
 bool Namespace ::
   operator==(const Namespace& obj) const
@@ -202,20 +149,6 @@ void Namespace ::
 // ----------------------------------------------------------------------
 // Setter functions
 // ----------------------------------------------------------------------
-
-void Namespace ::
-  set(
-      SimpleCType A,
-      SimpleCType2 B,
-      M::M2::NamespacedAliasType C,
-      M::NamespacedAliasType2 D
-  )
-{
-  this->m_A = A;
-  this->m_B = B;
-  this->m_C = C;
-  this->m_D = D;
-}
 
 void Namespace ::
   set_A(SimpleCType A)

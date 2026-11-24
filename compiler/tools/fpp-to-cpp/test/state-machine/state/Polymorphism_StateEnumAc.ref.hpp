@@ -119,8 +119,8 @@ namespace FppTest {
         {
           this->e = obj.e;
 #ifdef BUILD_UT
-        this->m_serializeValueIsSet = obj.m_serializeValueIsSet;
-        this->m_serializeValue = obj.m_serializeValue;
+          this->m_serializeValueIsSet = obj.m_serializeValueIsSet;
+          this->m_serializeValue = obj.m_serializeValue;
 #endif
           return *this;
         }
@@ -133,8 +133,8 @@ namespace FppTest {
           FW_ASSERT(isValid(e1), static_cast<FwAssertArgType>(e1));
           this->e = static_cast<enum T>(e1);
 #ifdef BUILD_UT
-        this->m_serializeValueIsSet = false;
-        this->m_serializeValue = 0;
+          this->m_serializeValueIsSet = false;
+          this->m_serializeValue = 0;
 #endif
           return *this;
         }
@@ -147,8 +147,8 @@ namespace FppTest {
           FW_ASSERT(isValid(e1), static_cast<FwAssertArgType>(e1));
           this->e = e1;
 #ifdef BUILD_UT
-        this->m_serializeValueIsSet = false;
-        this->m_serializeValue = 0;
+          this->m_serializeValueIsSet = false;
+          this->m_serializeValue = 0;
 #endif
           return *this;
         }

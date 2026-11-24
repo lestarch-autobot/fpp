@@ -11,11 +11,12 @@
 
 #include "C_XAliasAc.hpp"
 #include "Fw/FPrimeBasicTypes.hpp"
+#include "Fw/Types/Assert.hpp"
 #include "Fw/Types/ExternalString.hpp"
 #include "Fw/Types/Serializable.hpp"
 #include "Fw/Types/String.hpp"
 
-class C_A :
+class C_A final :
   public Fw::Serializable
 {
 
@@ -50,27 +51,51 @@ class C_A :
     // ----------------------------------------------------------------------
 
     //! Constructor (default value)
-    C_A();
+    constexpr C_A() :
+      Serializable(),
+      elements()
+    {
+    }
 
     //! Constructor (primitive array)
-    C_A(
+    constexpr C_A(
         const ElementType (&a)[SIZE] //!< The array
-    );
+    ) :
+      Serializable(),
+      elements()
+    {
+      *this = a;
+    }
 
     //! Constructor (single element)
-    explicit C_A(
+    constexpr explicit C_A(
         const ElementType& e //!< The element
-    );
+    ) :
+      Serializable(),
+      elements()
+    {
+      *this = e;
+    }
 
     //! Constructor (initializer list)
-    C_A(
+    constexpr C_A(
         const std::initializer_list<ElementType>& il //!< The initializer list
-    );
+    ) :
+      Serializable(),
+      elements()
+    {
+      *this = il;
+    }
 
     //! Copy constructor
-    C_A(
+    constexpr C_A(
         const C_A& obj //!< The source object
-    );
+    ) :
+      Serializable(),
+      elements()
+    {
+      *this = obj;
+    }
 
   public:
 
@@ -84,29 +109,62 @@ class C_A :
     );
 
     //! Const subscript operator
-    const ElementType& operator[](
+    constexpr const ElementType& operator[](
         const FwSizeType i //!< The subscript index
-    ) const;
+    ) const
+    {
+      FW_ASSERT(i < SIZE, static_cast<FwAssertArgType>(i), static_cast<FwAssertArgType>(SIZE));
+      return this->elements[i];
+    }
 
     //! Copy assignment operator (object)
-    C_A& operator=(
+    constexpr C_A& operator=(
         const C_A& obj //!< The source object
-    );
+    )
+    {
+      for (FwSizeType index = 0; index < SIZE; index++) {
+        this->elements[index] = obj.elements[index];
+      }
+      return *this;
+    }
 
     //! Copy assignment operator (primitive array)
-    C_A& operator=(
+    constexpr C_A& operator=(
         const ElementType (&a)[SIZE] //!< The source array
-    );
+    )
+    {
+      for (FwSizeType index = 0; index < SIZE; index++) {
+        this->elements[index] = a[index];
+      }
+      return *this;
+    }
 
     //! Copy assignment operator (initializer list)
-    C_A& operator=(
+    constexpr C_A& operator=(
         const std::initializer_list<ElementType>& il //!< The initializer list
-    );
+    )
+    {
+      // Check that the initializer has the expected size
+      FW_ASSERT(il.size() == SIZE, static_cast<FwAssertArgType>(il.size()), static_cast<FwAssertArgType>(SIZE));
+      FwSizeType i = 0;
+      for (const auto& e : il) {
+        FW_ASSERT(i < SIZE, static_cast<FwAssertArgType>(i), static_cast<FwAssertArgType>(SIZE));
+        this->elements[i] = e;
+        i++;
+      }
+      return *this;
+    }
 
     //! Copy assignment operator (single element)
-    C_A& operator=(
+    constexpr C_A& operator=(
         const ElementType& e //!< The element
-    );
+    )
+    {
+      for (FwSizeType index = 0; index < SIZE; index++) {
+        this->elements[index] = e;
+      }
+      return *this;
+    }
 
     //! Equality operator
     bool operator==(

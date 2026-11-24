@@ -11,12 +11,13 @@
 
 #include "E1EnumAc.hpp"
 #include "Fw/FPrimeBasicTypes.hpp"
+#include "Fw/Types/Assert.hpp"
 #include "Fw/Types/ExternalString.hpp"
 #include "Fw/Types/Serializable.hpp"
 #include "Fw/Types/String.hpp"
 
 //! Array with enum argument
-class Enum1 :
+class Enum1 final :
   public Fw::Serializable
 {
 
@@ -51,27 +52,52 @@ class Enum1 :
     // ----------------------------------------------------------------------
 
     //! Constructor (default value)
-    Enum1();
+    constexpr Enum1() :
+      Serializable(),
+      elements()
+    {
+      *this = Enum1({M::E1::X, M::E1::Y});
+    }
 
     //! Constructor (primitive array)
-    Enum1(
+    constexpr Enum1(
         const ElementType (&a)[SIZE] //!< The array
-    );
+    ) :
+      Serializable(),
+      elements()
+    {
+      *this = a;
+    }
 
     //! Constructor (single element)
-    explicit Enum1(
+    constexpr explicit Enum1(
         const ElementType& e //!< The element
-    );
+    ) :
+      Serializable(),
+      elements()
+    {
+      *this = e;
+    }
 
     //! Constructor (initializer list)
-    Enum1(
+    constexpr Enum1(
         const std::initializer_list<ElementType>& il //!< The initializer list
-    );
+    ) :
+      Serializable(),
+      elements()
+    {
+      *this = il;
+    }
 
     //! Copy constructor
-    Enum1(
+    constexpr Enum1(
         const Enum1& obj //!< The source object
-    );
+    ) :
+      Serializable(),
+      elements()
+    {
+      *this = obj;
+    }
 
   public:
 
@@ -85,29 +111,62 @@ class Enum1 :
     );
 
     //! Const subscript operator
-    const ElementType& operator[](
+    constexpr const ElementType& operator[](
         const FwSizeType i //!< The subscript index
-    ) const;
+    ) const
+    {
+      FW_ASSERT(i < SIZE, static_cast<FwAssertArgType>(i), static_cast<FwAssertArgType>(SIZE));
+      return this->elements[i];
+    }
 
     //! Copy assignment operator (object)
-    Enum1& operator=(
+    constexpr Enum1& operator=(
         const Enum1& obj //!< The source object
-    );
+    )
+    {
+      for (FwSizeType index = 0; index < SIZE; index++) {
+        this->elements[index] = obj.elements[index];
+      }
+      return *this;
+    }
 
     //! Copy assignment operator (primitive array)
-    Enum1& operator=(
+    constexpr Enum1& operator=(
         const ElementType (&a)[SIZE] //!< The source array
-    );
+    )
+    {
+      for (FwSizeType index = 0; index < SIZE; index++) {
+        this->elements[index] = a[index];
+      }
+      return *this;
+    }
 
     //! Copy assignment operator (initializer list)
-    Enum1& operator=(
+    constexpr Enum1& operator=(
         const std::initializer_list<ElementType>& il //!< The initializer list
-    );
+    )
+    {
+      // Check that the initializer has the expected size
+      FW_ASSERT(il.size() == SIZE, static_cast<FwAssertArgType>(il.size()), static_cast<FwAssertArgType>(SIZE));
+      FwSizeType i = 0;
+      for (const auto& e : il) {
+        FW_ASSERT(i < SIZE, static_cast<FwAssertArgType>(i), static_cast<FwAssertArgType>(SIZE));
+        this->elements[i] = e;
+        i++;
+      }
+      return *this;
+    }
 
     //! Copy assignment operator (single element)
-    Enum1& operator=(
+    constexpr Enum1& operator=(
         const ElementType& e //!< The element
-    );
+    )
+    {
+      for (FwSizeType index = 0; index < SIZE; index++) {
+        this->elements[index] = e;
+      }
+      return *this;
+    }
 
     //! Equality operator
     bool operator==(

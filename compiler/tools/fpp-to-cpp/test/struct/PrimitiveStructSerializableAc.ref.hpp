@@ -13,7 +13,7 @@
 #include "Fw/Types/String.hpp"
 #include "PrimitiveSerializableAc.hpp"
 
-class PrimitiveStruct :
+class PrimitiveStruct final :
   public Fw::Serializable
 {
 

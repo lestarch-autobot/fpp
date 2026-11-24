@@ -16,7 +16,7 @@ namespace FppTest {
 
   namespace SmState {
 
-    class BasicSelf_State :
+    class BasicSelf_State final :
       public Fw::Serializable
     {
 
@@ -60,35 +60,40 @@ namespace FppTest {
         // ----------------------------------------------------------------------
 
         //! Constructor (default value of __FPRIME_UNINITIALIZED)
-        BasicSelf_State()
+        constexpr BasicSelf_State() :
+          Serializable(),
+          e(__FPRIME_UNINITIALIZED)
         {
-          this->e = __FPRIME_UNINITIALIZED;
+
         }
 
         //! Constructor (user-provided value)
-        BasicSelf_State(
+        constexpr BasicSelf_State(
             const enum T e1 //!< The raw enum value
-        )
+        ) :
+          Serializable(),
+          e(e1)
         {
           FW_ASSERT(isValid(e1), static_cast<FwAssertArgType>(e1));
-          this->e = e1;
         }
 
         //! Constructor (serial representation value)
-        BasicSelf_State(
+        constexpr BasicSelf_State(
             const SerialType e1 //!< The serial representation value
-        )
+        ) :
+          Serializable(),
+          e(static_cast<enum T>(e1))
         {
           FW_ASSERT(isValid(e1), static_cast<FwAssertArgType>(e1));
-          this->e = static_cast<enum T>(e1);
         }
 
         //! Copy constructor
-        BasicSelf_State(
+        constexpr BasicSelf_State(
             const BasicSelf_State& obj //!< The source object
-        )
+        ) :
+          Serializable(),
+          e(obj.e)
         {
-          this->e = obj.e;
 #ifdef BUILD_UT
         this->m_serializeValueIsSet = obj.m_serializeValueIsSet;
         this->m_serializeValue = obj.m_serializeValue;
@@ -102,34 +107,60 @@ namespace FppTest {
         // ----------------------------------------------------------------------
 
         //! Copy assignment operator (object)
-        BasicSelf_State& operator=(
+        constexpr BasicSelf_State& operator=(
             const BasicSelf_State& obj //!< The source object
-        );
+        )
+        {
+          this->e = obj.e;
+#ifdef BUILD_UT
+          this->m_serializeValueIsSet = obj.m_serializeValueIsSet;
+          this->m_serializeValue = obj.m_serializeValue;
+#endif
+          return *this;
+        }
 
         //! Assignment operator (serial representation value)
-        BasicSelf_State& operator=(
+        constexpr BasicSelf_State& operator=(
             SerialType e1 //!< The serial representation value
-        );
+        )
+        {
+          FW_ASSERT(isValid(e1), static_cast<FwAssertArgType>(e1));
+          this->e = static_cast<enum T>(e1);
+#ifdef BUILD_UT
+          this->m_serializeValueIsSet = false;
+          this->m_serializeValue = 0;
+#endif
+          return *this;
+        }
 
         //! Copy assignment operator (raw enum)
-        BasicSelf_State& operator=(
+        constexpr BasicSelf_State& operator=(
             enum T e1 //!< The enum value
-        );
+        )
+        {
+          FW_ASSERT(isValid(e1), static_cast<FwAssertArgType>(e1));
+          this->e = e1;
+#ifdef BUILD_UT
+          this->m_serializeValueIsSet = false;
+          this->m_serializeValue = 0;
+#endif
+          return *this;
+        }
 
         //! Conversion operator
-        operator enum T() const
+        constexpr operator enum T() const
         {
           return this->e;
         }
 
         //! Equality operator
-        bool operator==(enum T e1) const
+        constexpr bool operator==(enum T e1) const
         {
           return this->e == e1;
         }
 
         //! Inequality operator
-        bool operator!=(enum T e1) const
+        constexpr bool operator!=(enum T e1) const
         {
           return !(*this == e1);
         }
@@ -190,9 +221,12 @@ namespace FppTest {
         // ----------------------------------------------------------------------
 
         //! Check serial type value for validity
-        static bool isValid(
+        static constexpr bool isValid(
             SerialType serialTypeValue //!< The serial type value
-        );
+        )
+        {
+          return (serialTypeValue <= S);
+        }
 
       public:
 

@@ -8,46 +8,6 @@
 #include "Fw/Types/Assert.hpp"
 
 // ----------------------------------------------------------------------
-// Constructors
-// ----------------------------------------------------------------------
-
-BitMaskArray ::
-  BitMaskArray() :
-    Serializable(),
-    elements()
-{
-
-}
-
-BitMaskArray ::
-  BitMaskArray(const ElementType (&a)[SIZE]) :
-    Serializable()
-{
-  *this = a;
-}
-
-BitMaskArray ::
-  BitMaskArray(const ElementType& e) :
-    Serializable()
-{
-  *this = e;
-}
-
-BitMaskArray ::
-  BitMaskArray(const std::initializer_list<ElementType>& il) :
-    Serializable()
-{
-  *this = il;
-}
-
-BitMaskArray ::
-  BitMaskArray(const BitMaskArray& obj) :
-    Serializable()
-{
-  *this = obj;
-}
-
-// ----------------------------------------------------------------------
 // Operators
 // ----------------------------------------------------------------------
 
@@ -56,56 +16,6 @@ BitMaskArray::ElementType& BitMaskArray ::
 {
   FW_ASSERT(i < SIZE, static_cast<FwAssertArgType>(i), static_cast<FwAssertArgType>(SIZE));
   return this->elements[i];
-}
-
-const BitMaskArray::ElementType& BitMaskArray ::
-  operator[](const FwSizeType i) const
-{
-  FW_ASSERT(i < SIZE, static_cast<FwAssertArgType>(i), static_cast<FwAssertArgType>(SIZE));
-  return this->elements[i];
-}
-
-BitMaskArray& BitMaskArray ::
-  operator=(const BitMaskArray& obj)
-{
-  if (this != &obj) {
-    for (FwSizeType index = 0; index < SIZE; index++) {
-      this->elements[index] = obj.elements[index];
-    }
-  }
-  return *this;
-}
-
-BitMaskArray& BitMaskArray ::
-  operator=(const ElementType (&a)[SIZE])
-{
-  for (FwSizeType index = 0; index < SIZE; index++) {
-    this->elements[index] = a[index];
-  }
-  return *this;
-}
-
-BitMaskArray& BitMaskArray ::
-  operator=(const std::initializer_list<ElementType>& il)
-{
-  // Check that the initializer has the expected size
-  FW_ASSERT(il.size() == SIZE, static_cast<FwAssertArgType>(il.size()), static_cast<FwAssertArgType>(SIZE));
-  FwSizeType i = 0;
-  for (const auto& e : il) {
-    FW_ASSERT(i < SIZE, static_cast<FwAssertArgType>(i), static_cast<FwAssertArgType>(SIZE));
-    this->elements[i] = e;
-    i++;
-  }
-  return *this;
-}
-
-BitMaskArray& BitMaskArray ::
-  operator=(const ElementType& e)
-{
-  for (FwSizeType index = 0; index < SIZE; index++) {
-    this->elements[index] = e;
-  }
-  return *this;
 }
 
 bool BitMaskArray ::

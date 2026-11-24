@@ -8,68 +8,8 @@
 #include "Fw/Types/Assert.hpp"
 
 // ----------------------------------------------------------------------
-// Constructors
-// ----------------------------------------------------------------------
-
-Enum ::
-  Enum() :
-    Serializable(),
-    m_e(),
-    m_eArr()
-{
-
-}
-
-Enum ::
-  Enum(
-      M::E::T e,
-      const Type_of_eArr& eArr
-  ) :
-    Serializable(),
-    m_e(e)
-{
-  for (FwSizeType i = 0; i < 3; i++) {
-    this->m_eArr[i] = eArr[i];
-  }
-}
-
-Enum ::
-  Enum(const Enum& obj) :
-    Serializable(),
-    m_e(obj.m_e)
-{
-  for (FwSizeType i = 0; i < 3; i++) {
-    this->m_eArr[i] = obj.m_eArr[i];
-  }
-}
-
-Enum ::
-  Enum(
-      M::E::T e,
-      M::E::T eArr
-  ) :
-    Serializable(),
-    m_e(e)
-{
-  for (FwSizeType i = 0; i < 3; i++) {
-    this->m_eArr[i] = eArr;
-  }
-}
-
-// ----------------------------------------------------------------------
 // Operators
 // ----------------------------------------------------------------------
-
-Enum& Enum ::
-  operator=(const Enum& obj)
-{
-  if (this == &obj) {
-    return *this;
-  }
-
-  set(obj.m_e, obj.m_eArr);
-  return *this;
-}
 
 bool Enum ::
   operator==(const Enum& obj) const
@@ -198,19 +138,6 @@ void Enum ::
 // ----------------------------------------------------------------------
 // Setter functions
 // ----------------------------------------------------------------------
-
-void Enum ::
-  set(
-      M::E::T e,
-      const Type_of_eArr& eArr
-  )
-{
-  this->m_e = e;
-
-  for (FwSizeType i = 0; i < 3; i++) {
-    this->m_eArr[i] = eArr[i];
-  }
-}
 
 void Enum ::
   set_e(M::E::T e)

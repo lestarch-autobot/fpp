@@ -482,6 +482,49 @@ trait CppWriterUtils extends LineUtils {
       )
     )
 
+  /** Writes a constexpr constructor or function defined in the class body */
+  def constexprClassMember(
+    comment: String,
+    prefix: String,
+    name: String,
+    params: List[CppDoc.Function.Param],
+    initializers: List[String],
+    body: List[Line],
+    constQualifier: CppDoc.Function.ConstQualifier = CppDoc.Function.NonConst
+  ): CppDoc.Class.Member = {
+    val paramLines = params.zipWithIndex.map((p, i) => {
+      val comma = if i < params.size - 1 then "," else ""
+      val comment = p.comment.map(c => s" //!< $c").getOrElse("")
+      line(s"    ${p.t.hppType} ${p.name}$comma$comment")
+    })
+    val constString = constQualifier match {
+      case CppDoc.Function.Const => " const"
+      case CppDoc.Function.NonConst => ""
+    }
+    val suffix = if initializers.isEmpty then constString else s"$constString :"
+    val prototype =
+      if params.isEmpty then lines(s"constexpr $prefix$name()$suffix")
+      else List.concat(
+        lines(s"constexpr $prefix$name("),
+        paramLines,
+        lines(s")$suffix")
+      )
+    val initializerLines = initializers.zipWithIndex.map((init, i) => {
+      val comma = if i < initializers.size - 1 then "," else ""
+      line(s"  $init$comma")
+    })
+    linesClassMember(
+      List.concat(
+        List(Line.blank, line(s"//! $comment")),
+        prototype,
+        initializerLines,
+        lines("{"),
+        body.map(indentIn),
+        lines("}")
+      )
+    )
+  }
+
   def destructorClassMember(
     comment: Option[String],
     body: List[Line],

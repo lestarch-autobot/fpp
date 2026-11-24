@@ -17,7 +17,7 @@
 #include "TStringSizeZeroAliasAc.hpp"
 #include "TU32AliasAc.hpp"
 
-class Basic :
+class Basic final :
   public Fw::Serializable
 {
 

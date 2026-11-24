@@ -13,7 +13,7 @@
 #include "Fw/Types/String.hpp"
 
 //! An enum type with an alias as its serial type
-class AliasSerialType :
+class AliasSerialType final :
   public Fw::Serializable
 {
 
@@ -55,35 +55,40 @@ class AliasSerialType :
     // ----------------------------------------------------------------------
 
     //! Constructor (default value of A)
-    AliasSerialType()
+    constexpr AliasSerialType() :
+      Serializable(),
+      e(A)
     {
-      this->e = A;
+
     }
 
     //! Constructor (user-provided value)
-    AliasSerialType(
+    constexpr AliasSerialType(
         const enum T e1 //!< The raw enum value
-    )
+    ) :
+      Serializable(),
+      e(e1)
     {
       FW_ASSERT(isValid(e1), static_cast<FwAssertArgType>(e1));
-      this->e = e1;
     }
 
     //! Constructor (serial representation value)
-    AliasSerialType(
+    constexpr AliasSerialType(
         const SerialType e1 //!< The serial representation value
-    )
+    ) :
+      Serializable(),
+      e(static_cast<enum T>(e1))
     {
       FW_ASSERT(isValid(e1), static_cast<FwAssertArgType>(e1));
-      this->e = static_cast<enum T>(e1);
     }
 
     //! Copy constructor
-    AliasSerialType(
+    constexpr AliasSerialType(
         const AliasSerialType& obj //!< The source object
-    )
+    ) :
+      Serializable(),
+      e(obj.e)
     {
-      this->e = obj.e;
 #ifdef BUILD_UT
     this->m_serializeValueIsSet = obj.m_serializeValueIsSet;
     this->m_serializeValue = obj.m_serializeValue;
@@ -97,34 +102,60 @@ class AliasSerialType :
     // ----------------------------------------------------------------------
 
     //! Copy assignment operator (object)
-    AliasSerialType& operator=(
+    constexpr AliasSerialType& operator=(
         const AliasSerialType& obj //!< The source object
-    );
+    )
+    {
+      this->e = obj.e;
+#ifdef BUILD_UT
+      this->m_serializeValueIsSet = obj.m_serializeValueIsSet;
+      this->m_serializeValue = obj.m_serializeValue;
+#endif
+      return *this;
+    }
 
     //! Assignment operator (serial representation value)
-    AliasSerialType& operator=(
+    constexpr AliasSerialType& operator=(
         SerialType e1 //!< The serial representation value
-    );
+    )
+    {
+      FW_ASSERT(isValid(e1), static_cast<FwAssertArgType>(e1));
+      this->e = static_cast<enum T>(e1);
+#ifdef BUILD_UT
+      this->m_serializeValueIsSet = false;
+      this->m_serializeValue = 0;
+#endif
+      return *this;
+    }
 
     //! Copy assignment operator (raw enum)
-    AliasSerialType& operator=(
+    constexpr AliasSerialType& operator=(
         enum T e1 //!< The enum value
-    );
+    )
+    {
+      FW_ASSERT(isValid(e1), static_cast<FwAssertArgType>(e1));
+      this->e = e1;
+#ifdef BUILD_UT
+      this->m_serializeValueIsSet = false;
+      this->m_serializeValue = 0;
+#endif
+      return *this;
+    }
 
     //! Conversion operator
-    operator enum T() const
+    constexpr operator enum T() const
     {
       return this->e;
     }
 
     //! Equality operator
-    bool operator==(enum T e1) const
+    constexpr bool operator==(enum T e1) const
     {
       return this->e == e1;
     }
 
     //! Inequality operator
-    bool operator!=(enum T e1) const
+    constexpr bool operator!=(enum T e1) const
     {
       return !(*this == e1);
     }
@@ -185,9 +216,12 @@ class AliasSerialType :
     // ----------------------------------------------------------------------
 
     //! Check serial type value for validity
-    static bool isValid(
+    static constexpr bool isValid(
         SerialType serialTypeValue //!< The serial type value
-    );
+    )
+    {
+      return (serialTypeValue <= B);
+    }
 
   public:
 

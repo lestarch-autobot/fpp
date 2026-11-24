@@ -16,7 +16,7 @@
 #include "S2SerializableAc.hpp"
 
 //! Array of structs with struct member
-class Struct2 :
+class Struct2 final :
   public Fw::Serializable
 {
 

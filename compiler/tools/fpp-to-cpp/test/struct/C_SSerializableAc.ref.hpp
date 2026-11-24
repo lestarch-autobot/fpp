@@ -12,7 +12,7 @@
 #include "Fw/Types/Serializable.hpp"
 #include "Fw/Types/String.hpp"
 
-class C_S :
+class C_S final :
   public Fw::Serializable
 {
 
@@ -35,15 +35,29 @@ class C_S :
     // ----------------------------------------------------------------------
 
     //! Constructor (default value)
-    C_S();
+    constexpr C_S() :
+      Serializable(),
+      m_x()
+    {
+    }
 
     //! Member constructor
-    C_S(U32 x);
+    constexpr C_S(
+        U32 x
+    ) :
+      Serializable(),
+      m_x(x)
+    {
+    }
 
     //! Copy constructor
-    C_S(
+    constexpr C_S(
         const C_S& obj //!< The source object
-    );
+    ) :
+      Serializable(),
+      m_x(obj.m_x)
+    {
+    }
 
   public:
 
@@ -52,9 +66,13 @@ class C_S :
     // ----------------------------------------------------------------------
 
     //! Copy assignment operator
-    C_S& operator=(
+    constexpr C_S& operator=(
         const C_S& obj //!< The source object
-    );
+    )
+    {
+      set(obj.m_x);
+      return *this;
+    }
 
     //! Equality operator
     bool operator==(
@@ -111,7 +129,7 @@ class C_S :
     // ----------------------------------------------------------------------
 
     //! Get member x
-    U32 get_x() const
+    constexpr U32 get_x() const
     {
       return this->m_x;
     }
@@ -121,7 +139,12 @@ class C_S :
     // ----------------------------------------------------------------------
 
     //! Set all members
-    void set(U32 x);
+    constexpr void set(
+        U32 x
+    )
+    {
+      this->m_x = x;
+    }
 
     //! Set member x
     void set_x(U32 x);

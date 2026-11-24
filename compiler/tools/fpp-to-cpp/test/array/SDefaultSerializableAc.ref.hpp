@@ -13,7 +13,7 @@
 #include "Fw/Types/String.hpp"
 
 //! Struct with a default value
-class SDefault :
+class SDefault final :
   public Fw::Serializable
 {
 
@@ -36,15 +36,29 @@ class SDefault :
     // ----------------------------------------------------------------------
 
     //! Constructor (default value)
-    SDefault();
+    constexpr SDefault() :
+      Serializable(),
+      m_x(42)
+    {
+    }
 
     //! Member constructor
-    SDefault(U32 x);
+    constexpr SDefault(
+        U32 x
+    ) :
+      Serializable(),
+      m_x(x)
+    {
+    }
 
     //! Copy constructor
-    SDefault(
+    constexpr SDefault(
         const SDefault& obj //!< The source object
-    );
+    ) :
+      Serializable(),
+      m_x(obj.m_x)
+    {
+    }
 
   public:
 
@@ -53,9 +67,13 @@ class SDefault :
     // ----------------------------------------------------------------------
 
     //! Copy assignment operator
-    SDefault& operator=(
+    constexpr SDefault& operator=(
         const SDefault& obj //!< The source object
-    );
+    )
+    {
+      set(obj.m_x);
+      return *this;
+    }
 
     //! Equality operator
     bool operator==(
@@ -112,7 +130,7 @@ class SDefault :
     // ----------------------------------------------------------------------
 
     //! Get member x
-    U32 get_x() const
+    constexpr U32 get_x() const
     {
       return this->m_x;
     }
@@ -122,7 +140,12 @@ class SDefault :
     // ----------------------------------------------------------------------
 
     //! Set all members
-    void set(U32 x);
+    constexpr void set(
+        U32 x
+    )
+    {
+      this->m_x = x;
+    }
 
     //! Set member x
     void set_x(U32 x);

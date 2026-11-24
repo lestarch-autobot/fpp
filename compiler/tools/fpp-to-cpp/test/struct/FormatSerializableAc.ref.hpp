@@ -12,7 +12,7 @@
 #include "Fw/Types/Serializable.hpp"
 #include "Fw/Types/String.hpp"
 
-class Format :
+class Format final :
   public Fw::Serializable
 {
 
@@ -51,10 +51,30 @@ class Format :
     // ----------------------------------------------------------------------
 
     //! Constructor (default value)
-    Format();
+    constexpr Format() :
+      Serializable(),
+      m_m1(),
+      m_m2(),
+      m_m3(),
+      m_m4(),
+      m_m5(),
+      m_m6(),
+      m_m7(),
+      m_m8(),
+      m_m9(),
+      m_m10(),
+      m_m11(),
+      m_m12(),
+      m_m13(),
+      m_m14(),
+      m_m15(),
+      m_m16(),
+      m_m17()
+    {
+    }
 
     //! Member constructor
-    Format(
+    constexpr Format(
         I32 m1,
         U32 m2,
         I32 m3,
@@ -72,12 +92,52 @@ class Format :
         F32 m15,
         F32 m16,
         F32 m17
-    );
+    ) :
+      Serializable(),
+      m_m1(m1),
+      m_m2(m2),
+      m_m3(m3),
+      m_m4(m4),
+      m_m5(m5),
+      m_m6(m6),
+      m_m7(m7),
+      m_m8(m8),
+      m_m9(m9),
+      m_m10(m10),
+      m_m11(m11),
+      m_m12(m12),
+      m_m13(m13),
+      m_m14(m14),
+      m_m15(m15),
+      m_m16(m16),
+      m_m17(m17)
+    {
+    }
 
     //! Copy constructor
-    Format(
+    constexpr Format(
         const Format& obj //!< The source object
-    );
+    ) :
+      Serializable(),
+      m_m1(obj.m_m1),
+      m_m2(obj.m_m2),
+      m_m3(obj.m_m3),
+      m_m4(obj.m_m4),
+      m_m5(obj.m_m5),
+      m_m6(obj.m_m6),
+      m_m7(obj.m_m7),
+      m_m8(obj.m_m8),
+      m_m9(obj.m_m9),
+      m_m10(obj.m_m10),
+      m_m11(obj.m_m11),
+      m_m12(obj.m_m12),
+      m_m13(obj.m_m13),
+      m_m14(obj.m_m14),
+      m_m15(obj.m_m15),
+      m_m16(obj.m_m16),
+      m_m17(obj.m_m17)
+    {
+    }
 
   public:
 
@@ -86,9 +146,13 @@ class Format :
     // ----------------------------------------------------------------------
 
     //! Copy assignment operator
-    Format& operator=(
+    constexpr Format& operator=(
         const Format& obj //!< The source object
-    );
+    )
+    {
+      set(obj.m_m1, obj.m_m2, obj.m_m3, obj.m_m4, obj.m_m5, obj.m_m6, obj.m_m7, obj.m_m8, obj.m_m9, obj.m_m10, obj.m_m11, obj.m_m12, obj.m_m13, obj.m_m14, obj.m_m15, obj.m_m16, obj.m_m17);
+      return *this;
+    }
 
     //! Equality operator
     bool operator==(
@@ -145,103 +209,103 @@ class Format :
     // ----------------------------------------------------------------------
 
     //! Get member m1
-    I32 get_m1() const
+    constexpr I32 get_m1() const
     {
       return this->m_m1;
     }
 
     //! Get member m2
-    U32 get_m2() const
+    constexpr U32 get_m2() const
     {
       return this->m_m2;
     }
 
     //! Get member m3
-    I32 get_m3() const
+    constexpr I32 get_m3() const
     {
       return this->m_m3;
     }
 
     //! Get member m4
-    U32 get_m4() const
+    constexpr U32 get_m4() const
     {
       return this->m_m4;
     }
 
     //! Get member m5
-    I32 get_m5() const
+    constexpr I32 get_m5() const
     {
       return this->m_m5;
     }
 
     //! Get member m6
-    U32 get_m6() const
+    constexpr U32 get_m6() const
     {
       return this->m_m6;
     }
 
     //! Get member m7
-    I32 get_m7() const
+    constexpr I32 get_m7() const
     {
       return this->m_m7;
     }
 
     //! Get member m8
-    U32 get_m8() const
+    constexpr U32 get_m8() const
     {
       return this->m_m8;
     }
 
     //! Get member m9
-    I32 get_m9() const
+    constexpr I32 get_m9() const
     {
       return this->m_m9;
     }
 
     //! Get member m10
-    U32 get_m10() const
+    constexpr U32 get_m10() const
     {
       return this->m_m10;
     }
 
     //! Get member m11
-    F32 get_m11() const
+    constexpr F32 get_m11() const
     {
       return this->m_m11;
     }
 
     //! Get member m12
-    F32 get_m12() const
+    constexpr F32 get_m12() const
     {
       return this->m_m12;
     }
 
     //! Get member m13
-    F32 get_m13() const
+    constexpr F32 get_m13() const
     {
       return this->m_m13;
     }
 
     //! Get member m14
-    F32 get_m14() const
+    constexpr F32 get_m14() const
     {
       return this->m_m14;
     }
 
     //! Get member m15
-    F32 get_m15() const
+    constexpr F32 get_m15() const
     {
       return this->m_m15;
     }
 
     //! Get member m16
-    F32 get_m16() const
+    constexpr F32 get_m16() const
     {
       return this->m_m16;
     }
 
     //! Get member m17
-    F32 get_m17() const
+    constexpr F32 get_m17() const
     {
       return this->m_m17;
     }
@@ -251,7 +315,7 @@ class Format :
     // ----------------------------------------------------------------------
 
     //! Set all members
-    void set(
+    constexpr void set(
         I32 m1,
         U32 m2,
         I32 m3,
@@ -269,7 +333,26 @@ class Format :
         F32 m15,
         F32 m16,
         F32 m17
-    );
+    )
+    {
+      this->m_m1 = m1;
+      this->m_m2 = m2;
+      this->m_m3 = m3;
+      this->m_m4 = m4;
+      this->m_m5 = m5;
+      this->m_m6 = m6;
+      this->m_m7 = m7;
+      this->m_m8 = m8;
+      this->m_m9 = m9;
+      this->m_m10 = m10;
+      this->m_m11 = m11;
+      this->m_m12 = m12;
+      this->m_m13 = m13;
+      this->m_m14 = m14;
+      this->m_m15 = m15;
+      this->m_m16 = m16;
+      this->m_m17 = m17;
+    }
 
     //! Set member m1
     void set_m1(I32 m1);

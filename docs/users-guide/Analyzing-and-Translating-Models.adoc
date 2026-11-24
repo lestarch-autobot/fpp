@@ -249,6 +249,30 @@ module M {
 generates an array class `M::A` in files `AArrayAc.hpp`
 and `AArrayAc.cpp`.
 
+*Constant expressions:*
+The {cpp} class generated for an enum, array, or struct definition
+is a literal type if it has no string member or element and no
+abstract type member or element, directly or through
+another array or struct type.
+In this case the constructors, the copy assignment operators,
+the `const` subscript operator of an array, and the `const`
+getter functions of a struct are `constexpr`, so you can use
+the class to define compile-time constants.
+For example, with the array `A` defined above you can write
+
+[source,cpp]
+----
+constexpr A a = {1, 2, 3};
+static_assert(a[0] == 1, "unexpected value");
+----
+
+This feature requires an F Prime version in which the destructor of
+`Fw::Serializable` is not virtual.
+
+*Final classes:*
+The {cpp} classes generated for enum, array, and struct definitions
+are declared `final`, so you cannot define subclasses of them.
+
 *Headers for alias types:*
 For alias types, a {cpp} header with suffix `.hpp` is always generated.
 A C header with suffix `.h` is also generated if the alias type

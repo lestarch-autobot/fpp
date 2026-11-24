@@ -13,7 +13,7 @@
 #include "Fw/Types/String.hpp"
 #include "Modules2SerializableAc.hpp"
 
-class Modules3 :
+class Modules3 final :
   public Fw::Serializable
 {
 
@@ -46,24 +46,53 @@ class Modules3 :
     // ----------------------------------------------------------------------
 
     //! Constructor (default value)
-    Modules3();
+    constexpr Modules3() :
+      Serializable(),
+      m_x(),
+      m_arr()
+    {
+    }
 
     //! Member constructor
-    Modules3(
+    constexpr Modules3(
         const M::Modules2& x,
         const Type_of_arr& arr
-    );
+    ) :
+      Serializable(),
+      m_x(x),
+      m_arr()
+    {
+      for (FwSizeType i = 0; i < 3; i++) {
+        this->m_arr[i] = arr[i];
+      }
+    }
 
     //! Copy constructor
-    Modules3(
+    constexpr Modules3(
         const Modules3& obj //!< The source object
-    );
+    ) :
+      Serializable(),
+      m_x(obj.m_x),
+      m_arr()
+    {
+      for (FwSizeType i = 0; i < 3; i++) {
+        this->m_arr[i] = obj.m_arr[i];
+      }
+    }
 
     //! Member constructor (scalar values for arrays)
-    Modules3(
+    constexpr Modules3(
         const M::Modules2& x,
         const M::Modules2& arr
-    );
+    ) :
+      Serializable(),
+      m_x(x),
+      m_arr()
+    {
+      for (FwSizeType i = 0; i < 3; i++) {
+        this->m_arr[i] = arr;
+      }
+    }
 
   public:
 
@@ -72,9 +101,13 @@ class Modules3 :
     // ----------------------------------------------------------------------
 
     //! Copy assignment operator
-    Modules3& operator=(
+    constexpr Modules3& operator=(
         const Modules3& obj //!< The source object
-    );
+    )
+    {
+      set(obj.m_x, obj.m_arr);
+      return *this;
+    }
 
     //! Equality operator
     bool operator==(
@@ -137,7 +170,7 @@ class Modules3 :
     }
 
     //! Get member x (const)
-    const M::Modules2& get_x() const
+    constexpr const M::Modules2& get_x() const
     {
       return this->m_x;
     }
@@ -149,7 +182,7 @@ class Modules3 :
     }
 
     //! Get member arr (const)
-    const Type_of_arr& get_arr() const
+    constexpr const Type_of_arr& get_arr() const
     {
       return this->m_arr;
     }
@@ -159,10 +192,17 @@ class Modules3 :
     // ----------------------------------------------------------------------
 
     //! Set all members
-    void set(
+    constexpr void set(
         const M::Modules2& x,
         const Type_of_arr& arr
-    );
+    )
+    {
+      this->m_x = x;
+
+      for (FwSizeType i = 0; i < 3; i++) {
+        this->m_arr[i] = arr[i];
+      }
+    }
 
     //! Set member x
     void set_x(const M::Modules2& x);

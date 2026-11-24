@@ -13,7 +13,7 @@
 #include "Fw/Types/String.hpp"
 #include "Modules2SerializableAc.hpp"
 
-class Modules4 :
+class Modules4 final :
   public Fw::Serializable
 {
 
@@ -49,24 +49,62 @@ class Modules4 :
     // ----------------------------------------------------------------------
 
     //! Constructor (default value)
-    Modules4();
+    constexpr Modules4() :
+      Serializable(),
+      m_arr1(),
+      m_arr2()
+    {
+    }
 
     //! Member constructor
-    Modules4(
+    constexpr Modules4(
         const Type_of_arr1& arr1,
         const Type_of_arr2& arr2
-    );
+    ) :
+      Serializable(),
+      m_arr1(),
+      m_arr2()
+    {
+      for (FwSizeType i = 0; i < 3; i++) {
+        this->m_arr1[i] = arr1[i];
+      }
+      for (FwSizeType i = 0; i < 6; i++) {
+        this->m_arr2[i] = arr2[i];
+      }
+    }
 
     //! Copy constructor
-    Modules4(
+    constexpr Modules4(
         const Modules4& obj //!< The source object
-    );
+    ) :
+      Serializable(),
+      m_arr1(),
+      m_arr2()
+    {
+      for (FwSizeType i = 0; i < 3; i++) {
+        this->m_arr1[i] = obj.m_arr1[i];
+      }
+      for (FwSizeType i = 0; i < 6; i++) {
+        this->m_arr2[i] = obj.m_arr2[i];
+      }
+    }
 
     //! Member constructor (scalar values for arrays)
-    Modules4(
+    constexpr Modules4(
         const M::Modules2& arr1,
         const M::Modules2& arr2
-    );
+    ) :
+      Serializable(),
+      m_arr1(),
+      m_arr2()
+    {
+      for (FwSizeType i = 0; i < 3; i++) {
+        this->m_arr1[i] = arr1;
+      }
+      for (FwSizeType i = 0; i < 6; i++) {
+        this->m_arr2[i] = arr2;
+      }
+    }
 
   public:
 
@@ -75,9 +113,13 @@ class Modules4 :
     // ----------------------------------------------------------------------
 
     //! Copy assignment operator
-    Modules4& operator=(
+    constexpr Modules4& operator=(
         const Modules4& obj //!< The source object
-    );
+    )
+    {
+      set(obj.m_arr1, obj.m_arr2);
+      return *this;
+    }
 
     //! Equality operator
     bool operator==(
@@ -140,7 +182,7 @@ class Modules4 :
     }
 
     //! Get member arr1 (const)
-    const Type_of_arr1& get_arr1() const
+    constexpr const Type_of_arr1& get_arr1() const
     {
       return this->m_arr1;
     }
@@ -152,7 +194,7 @@ class Modules4 :
     }
 
     //! Get member arr2 (const)
-    const Type_of_arr2& get_arr2() const
+    constexpr const Type_of_arr2& get_arr2() const
     {
       return this->m_arr2;
     }
@@ -162,10 +204,19 @@ class Modules4 :
     // ----------------------------------------------------------------------
 
     //! Set all members
-    void set(
+    constexpr void set(
         const Type_of_arr1& arr1,
         const Type_of_arr2& arr2
-    );
+    )
+    {
+
+      for (FwSizeType i = 0; i < 3; i++) {
+        this->m_arr1[i] = arr1[i];
+      }
+      for (FwSizeType i = 0; i < 6; i++) {
+        this->m_arr2[i] = arr2[i];
+      }
+    }
 
     //! Set member arr1
     void set_arr1(const Type_of_arr1& arr1);

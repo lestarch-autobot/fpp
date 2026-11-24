@@ -15,7 +15,7 @@
 
 //! Top-level annotation, line 1
 //! Top-level annotation, line 2
-class Primitive :
+class Primitive final :
   public Fw::Serializable
 {
 

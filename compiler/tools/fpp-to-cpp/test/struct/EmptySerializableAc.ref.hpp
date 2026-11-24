@@ -12,7 +12,7 @@
 #include "Fw/Types/Serializable.hpp"
 #include "Fw/Types/String.hpp"
 
-class Empty :
+class Empty final :
   public Fw::Serializable
 {
 
@@ -35,12 +35,19 @@ class Empty :
     // ----------------------------------------------------------------------
 
     //! Constructor (default value)
-    Empty();
+    constexpr Empty() :
+      Serializable()
+    {
+    }
 
     //! Copy constructor
-    Empty(
+    constexpr Empty(
         const Empty& obj //!< The source object
-    );
+    ) :
+      Serializable()
+    {
+      (void) obj;
+    }
 
   public:
 
@@ -49,9 +56,13 @@ class Empty :
     // ----------------------------------------------------------------------
 
     //! Copy assignment operator
-    Empty& operator=(
+    constexpr Empty& operator=(
         const Empty& obj //!< The source object
-    );
+    )
+    {
+      (void) obj;
+      return *this;
+    }
 
     //! Equality operator
     bool operator==(

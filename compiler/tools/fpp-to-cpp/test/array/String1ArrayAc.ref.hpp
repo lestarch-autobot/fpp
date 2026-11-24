@@ -16,7 +16,7 @@
 #include "config/FwSizeStoreTypeAliasAc.hpp"
 
 //! An array of strings
-class String1 :
+class String1 final :
   public Fw::Serializable
 {
 

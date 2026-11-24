@@ -14,7 +14,7 @@
 #include "SDefaultSerializableAc.hpp"
 
 //! Struct wrapping a struct with a default field
-class SWrapper :
+class SWrapper final :
   public Fw::Serializable
 {
 
@@ -37,15 +37,29 @@ class SWrapper :
     // ----------------------------------------------------------------------
 
     //! Constructor (default value)
-    SWrapper();
+    constexpr SWrapper() :
+      Serializable(),
+      m_s()
+    {
+    }
 
     //! Member constructor
-    SWrapper(const SDefault& s);
+    constexpr SWrapper(
+        const SDefault& s
+    ) :
+      Serializable(),
+      m_s(s)
+    {
+    }
 
     //! Copy constructor
-    SWrapper(
+    constexpr SWrapper(
         const SWrapper& obj //!< The source object
-    );
+    ) :
+      Serializable(),
+      m_s(obj.m_s)
+    {
+    }
 
   public:
 
@@ -54,9 +68,13 @@ class SWrapper :
     // ----------------------------------------------------------------------
 
     //! Copy assignment operator
-    SWrapper& operator=(
+    constexpr SWrapper& operator=(
         const SWrapper& obj //!< The source object
-    );
+    )
+    {
+      set(obj.m_s);
+      return *this;
+    }
 
     //! Equality operator
     bool operator==(
@@ -119,7 +137,7 @@ class SWrapper :
     }
 
     //! Get member s (const)
-    const SDefault& get_s() const
+    constexpr const SDefault& get_s() const
     {
       return this->m_s;
     }
@@ -129,7 +147,12 @@ class SWrapper :
     // ----------------------------------------------------------------------
 
     //! Set all members
-    void set(const SDefault& s);
+    constexpr void set(
+        const SDefault& s
+    )
+    {
+      this->m_s = s;
+    }
 
     //! Set member s
     void set_s(const SDefault& s);

@@ -10,47 +10,8 @@
 namespace M {
 
   // ----------------------------------------------------------------------
-  // Constructors
-  // ----------------------------------------------------------------------
-
-  Modules2 ::
-    Modules2() :
-      Serializable(),
-      m_x()
-  {
-
-  }
-
-  Modules2 ::
-    Modules2(const M::Modules1& x) :
-      Serializable(),
-      m_x(x)
-  {
-
-  }
-
-  Modules2 ::
-    Modules2(const Modules2& obj) :
-      Serializable(),
-      m_x(obj.m_x)
-  {
-
-  }
-
-  // ----------------------------------------------------------------------
   // Operators
   // ----------------------------------------------------------------------
-
-  Modules2& Modules2 ::
-    operator=(const Modules2& obj)
-  {
-    if (this == &obj) {
-      return *this;
-    }
-
-    set(obj.m_x);
-    return *this;
-  }
 
   bool Modules2 ::
     operator==(const Modules2& obj) const
@@ -139,12 +100,6 @@ namespace M {
   // ----------------------------------------------------------------------
   // Setter functions
   // ----------------------------------------------------------------------
-
-  void Modules2 ::
-    set(const M::Modules1& x)
-  {
-    this->m_x = x;
-  }
 
   void Modules2 ::
     set_x(const M::Modules1& x)

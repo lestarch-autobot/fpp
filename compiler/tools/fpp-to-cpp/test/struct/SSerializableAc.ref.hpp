@@ -13,7 +13,7 @@
 #include "Fw/Types/String.hpp"
 
 //! An identical struct outside the component
-class S :
+class S final :
   public Fw::Serializable
 {
 
@@ -36,15 +36,29 @@ class S :
     // ----------------------------------------------------------------------
 
     //! Constructor (default value)
-    S();
+    constexpr S() :
+      Serializable(),
+      m_x()
+    {
+    }
 
     //! Member constructor
-    S(U32 x);
+    constexpr S(
+        U32 x
+    ) :
+      Serializable(),
+      m_x(x)
+    {
+    }
 
     //! Copy constructor
-    S(
+    constexpr S(
         const S& obj //!< The source object
-    );
+    ) :
+      Serializable(),
+      m_x(obj.m_x)
+    {
+    }
 
   public:
 
@@ -53,9 +67,13 @@ class S :
     // ----------------------------------------------------------------------
 
     //! Copy assignment operator
-    S& operator=(
+    constexpr S& operator=(
         const S& obj //!< The source object
-    );
+    )
+    {
+      set(obj.m_x);
+      return *this;
+    }
 
     //! Equality operator
     bool operator==(
@@ -112,7 +130,7 @@ class S :
     // ----------------------------------------------------------------------
 
     //! Get member x
-    U32 get_x() const
+    constexpr U32 get_x() const
     {
       return this->m_x;
     }
@@ -122,7 +140,12 @@ class S :
     // ----------------------------------------------------------------------
 
     //! Set all members
-    void set(U32 x);
+    constexpr void set(
+        U32 x
+    )
+    {
+      this->m_x = x;
+    }
 
     //! Set member x
     void set_x(U32 x);

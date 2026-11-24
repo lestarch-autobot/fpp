@@ -10,46 +10,6 @@
 namespace M {
 
   // ----------------------------------------------------------------------
-  // Constructors
-  // ----------------------------------------------------------------------
-
-  PrimitiveBool ::
-    PrimitiveBool() :
-      Serializable(),
-      elements()
-  {
-
-  }
-
-  PrimitiveBool ::
-    PrimitiveBool(const ElementType (&a)[SIZE]) :
-      Serializable()
-  {
-    *this = a;
-  }
-
-  PrimitiveBool ::
-    PrimitiveBool(const ElementType& e) :
-      Serializable()
-  {
-    *this = e;
-  }
-
-  PrimitiveBool ::
-    PrimitiveBool(const std::initializer_list<ElementType>& il) :
-      Serializable()
-  {
-    *this = il;
-  }
-
-  PrimitiveBool ::
-    PrimitiveBool(const PrimitiveBool& obj) :
-      Serializable()
-  {
-    *this = obj;
-  }
-
-  // ----------------------------------------------------------------------
   // Operators
   // ----------------------------------------------------------------------
 
@@ -58,56 +18,6 @@ namespace M {
   {
     FW_ASSERT(i < SIZE, static_cast<FwAssertArgType>(i), static_cast<FwAssertArgType>(SIZE));
     return this->elements[i];
-  }
-
-  const PrimitiveBool::ElementType& PrimitiveBool ::
-    operator[](const FwSizeType i) const
-  {
-    FW_ASSERT(i < SIZE, static_cast<FwAssertArgType>(i), static_cast<FwAssertArgType>(SIZE));
-    return this->elements[i];
-  }
-
-  PrimitiveBool& PrimitiveBool ::
-    operator=(const PrimitiveBool& obj)
-  {
-    if (this != &obj) {
-      for (FwSizeType index = 0; index < SIZE; index++) {
-        this->elements[index] = obj.elements[index];
-      }
-    }
-    return *this;
-  }
-
-  PrimitiveBool& PrimitiveBool ::
-    operator=(const ElementType (&a)[SIZE])
-  {
-    for (FwSizeType index = 0; index < SIZE; index++) {
-      this->elements[index] = a[index];
-    }
-    return *this;
-  }
-
-  PrimitiveBool& PrimitiveBool ::
-    operator=(const std::initializer_list<ElementType>& il)
-  {
-    // Check that the initializer has the expected size
-    FW_ASSERT(il.size() == SIZE, static_cast<FwAssertArgType>(il.size()), static_cast<FwAssertArgType>(SIZE));
-    FwSizeType i = 0;
-    for (const auto& e : il) {
-      FW_ASSERT(i < SIZE, static_cast<FwAssertArgType>(i), static_cast<FwAssertArgType>(SIZE));
-      this->elements[i] = e;
-      i++;
-    }
-    return *this;
-  }
-
-  PrimitiveBool& PrimitiveBool ::
-    operator=(const ElementType& e)
-  {
-    for (FwSizeType index = 0; index < SIZE; index++) {
-      this->elements[index] = e;
-    }
-    return *this;
   }
 
   bool PrimitiveBool ::

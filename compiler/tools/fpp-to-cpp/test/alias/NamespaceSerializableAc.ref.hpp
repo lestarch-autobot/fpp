@@ -16,7 +16,7 @@
 #include "SimpleCType2AliasAc.hpp"
 #include "SimpleCTypeAliasAc.hpp"
 
-class Namespace :
+class Namespace final :
   public Fw::Serializable
 {
 
@@ -42,20 +42,41 @@ class Namespace :
     // ----------------------------------------------------------------------
 
     //! Constructor (default value)
-    Namespace();
+    constexpr Namespace() :
+      Serializable(),
+      m_A(),
+      m_B(),
+      m_C(),
+      m_D()
+    {
+    }
 
     //! Member constructor
-    Namespace(
+    constexpr Namespace(
         SimpleCType A,
         SimpleCType2 B,
         M::M2::NamespacedAliasType C,
         M::NamespacedAliasType2 D
-    );
+    ) :
+      Serializable(),
+      m_A(A),
+      m_B(B),
+      m_C(C),
+      m_D(D)
+    {
+    }
 
     //! Copy constructor
-    Namespace(
+    constexpr Namespace(
         const Namespace& obj //!< The source object
-    );
+    ) :
+      Serializable(),
+      m_A(obj.m_A),
+      m_B(obj.m_B),
+      m_C(obj.m_C),
+      m_D(obj.m_D)
+    {
+    }
 
   public:
 
@@ -64,9 +85,13 @@ class Namespace :
     // ----------------------------------------------------------------------
 
     //! Copy assignment operator
-    Namespace& operator=(
+    constexpr Namespace& operator=(
         const Namespace& obj //!< The source object
-    );
+    )
+    {
+      set(obj.m_A, obj.m_B, obj.m_C, obj.m_D);
+      return *this;
+    }
 
     //! Equality operator
     bool operator==(
@@ -123,25 +148,25 @@ class Namespace :
     // ----------------------------------------------------------------------
 
     //! Get member A
-    SimpleCType get_A() const
+    constexpr SimpleCType get_A() const
     {
       return this->m_A;
     }
 
     //! Get member B
-    SimpleCType2 get_B() const
+    constexpr SimpleCType2 get_B() const
     {
       return this->m_B;
     }
 
     //! Get member C
-    M::M2::NamespacedAliasType get_C() const
+    constexpr M::M2::NamespacedAliasType get_C() const
     {
       return this->m_C;
     }
 
     //! Get member D
-    M::NamespacedAliasType2 get_D() const
+    constexpr M::NamespacedAliasType2 get_D() const
     {
       return this->m_D;
     }
@@ -151,12 +176,18 @@ class Namespace :
     // ----------------------------------------------------------------------
 
     //! Set all members
-    void set(
+    constexpr void set(
         SimpleCType A,
         SimpleCType2 B,
         M::M2::NamespacedAliasType C,
         M::NamespacedAliasType2 D
-    );
+    )
+    {
+      this->m_A = A;
+      this->m_B = B;
+      this->m_C = C;
+      this->m_D = D;
+    }
 
     //! Set member A
     void set_A(SimpleCType A);

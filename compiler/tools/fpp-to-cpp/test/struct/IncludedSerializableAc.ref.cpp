@@ -8,47 +8,8 @@
 #include "IncludedSerializableAc.hpp"
 
 // ----------------------------------------------------------------------
-// Constructors
-// ----------------------------------------------------------------------
-
-Included ::
-  Included() :
-    Serializable(),
-    m_x()
-{
-
-}
-
-Included ::
-  Included(U32 x) :
-    Serializable(),
-    m_x(x)
-{
-
-}
-
-Included ::
-  Included(const Included& obj) :
-    Serializable(),
-    m_x(obj.m_x)
-{
-
-}
-
-// ----------------------------------------------------------------------
 // Operators
 // ----------------------------------------------------------------------
-
-Included& Included ::
-  operator=(const Included& obj)
-{
-  if (this == &obj) {
-    return *this;
-  }
-
-  set(obj.m_x);
-  return *this;
-}
 
 bool Included ::
   operator==(const Included& obj) const
@@ -137,12 +98,6 @@ void Included ::
 // ----------------------------------------------------------------------
 // Setter functions
 // ----------------------------------------------------------------------
-
-void Included ::
-  set(U32 x)
-{
-  this->m_x = x;
-}
 
 void Included ::
   set_x(U32 x)

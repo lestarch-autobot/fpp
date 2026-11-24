@@ -17,7 +17,7 @@
 
 namespace M {
 
-  class PrimitiveBool :
+  class PrimitiveBool final :
     public Fw::Serializable
   {
 

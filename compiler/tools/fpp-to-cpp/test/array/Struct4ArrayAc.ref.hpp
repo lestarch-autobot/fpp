@@ -17,7 +17,7 @@
 #include "SWrapperSerializableAc.hpp"
 
 //! An array of structs wrapping a struct with a default member
-class Struct4 :
+class Struct4 final :
   public Fw::Serializable
 {
 

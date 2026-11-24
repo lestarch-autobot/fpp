@@ -16,7 +16,7 @@ namespace FppTest {
 
   namespace SmState {
 
-    class Polymorphism_State :
+    class Polymorphism_State final :
       public Fw::Serializable
     {
 

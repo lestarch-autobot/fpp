@@ -16,7 +16,7 @@ namespace FppTest {
 
   namespace SmState {
 
-    class StateToChild_State :
+    class StateToChild_State final :
       public Fw::Serializable
     {
 

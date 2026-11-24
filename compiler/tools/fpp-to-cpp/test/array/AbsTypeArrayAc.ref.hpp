@@ -16,7 +16,7 @@
 #include "T.hpp"
 
 //! An array of abstract type
-class AbsType :
+class AbsType final :
   public Fw::Serializable
 {
 

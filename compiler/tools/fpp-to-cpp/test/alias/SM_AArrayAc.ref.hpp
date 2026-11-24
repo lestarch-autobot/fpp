@@ -16,7 +16,7 @@
 #include "Fw/Types/String.hpp"
 #include "SM_XAliasAc.hpp"
 
-class SM_A :
+class SM_A final :
   public Fw::Serializable
 {
 

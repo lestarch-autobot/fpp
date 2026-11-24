@@ -14,7 +14,7 @@
 
 namespace M {
 
-  class E1 :
+  class E1 final :
     public Fw::Serializable
   {
 

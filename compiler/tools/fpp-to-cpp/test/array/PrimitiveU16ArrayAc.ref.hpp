@@ -17,7 +17,7 @@
 
 namespace M {
 
-  class PrimitiveU16 :
+  class PrimitiveU16 final :
     public Fw::Serializable
   {
 

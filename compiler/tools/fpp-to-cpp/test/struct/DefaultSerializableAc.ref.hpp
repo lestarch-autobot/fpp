@@ -13,7 +13,7 @@
 #include "Fw/Types/String.hpp"
 #include "config/FwSizeStoreTypeAliasAc.hpp"
 
-class Default :
+class Default final :
   public Fw::Serializable
 {
 

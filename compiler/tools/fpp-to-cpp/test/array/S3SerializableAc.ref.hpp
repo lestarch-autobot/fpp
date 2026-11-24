@@ -15,7 +15,7 @@
 namespace S {
 
   //! A struct with a member array
-  class S3 :
+  class S3 final :
     public Fw::Serializable
   {
 

@@ -16,7 +16,7 @@ namespace FppTest {
 
   namespace SmChoice {
 
-    class SequenceU32_State :
+    class SequenceU32_State final :
       public Fw::Serializable
     {
 

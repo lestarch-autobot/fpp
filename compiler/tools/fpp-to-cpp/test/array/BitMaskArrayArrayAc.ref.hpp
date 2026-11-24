@@ -16,7 +16,7 @@
 #include "Fw/Types/String.hpp"
 
 //! An bitmask array
-class BitMaskArray :
+class BitMaskArray final :
   public Fw::Serializable
 {
 

@@ -18,7 +18,7 @@
 namespace M {
 
   //! An array of F32 with default value and format string
-  class PrimitiveF32e :
+  class PrimitiveF32e final :
     public Fw::Serializable
   {
 

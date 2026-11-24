@@ -13,7 +13,7 @@
 #include "Fw/Types/String.hpp"
 
 //! Struct with a default value
-class SDefault :
+class SDefault final :
   public Fw::Serializable
 {
 

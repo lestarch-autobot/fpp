@@ -16,7 +16,7 @@ namespace FppTest {
 
   namespace SmInitial {
 
-    class Nested_State :
+    class Nested_State final :
       public Fw::Serializable
     {
 

@@ -16,7 +16,7 @@
 #include "S1SerializableAc.hpp"
 
 //! An array of structs
-class Struct1 :
+class Struct1 final :
   public Fw::Serializable
 {
 

@@ -17,7 +17,7 @@
 #include "Fw/Types/String.hpp"
 
 //! An array of aliased F32 with a format string
-class AliasTypeFormat :
+class AliasTypeFormat final :
   public Fw::Serializable
 {
 

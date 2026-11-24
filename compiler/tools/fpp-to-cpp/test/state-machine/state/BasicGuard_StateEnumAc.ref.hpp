@@ -16,7 +16,7 @@ namespace FppTest {
 
   namespace SmState {
 
-    class BasicGuard_State :
+    class BasicGuard_State final :
       public Fw::Serializable
     {
 

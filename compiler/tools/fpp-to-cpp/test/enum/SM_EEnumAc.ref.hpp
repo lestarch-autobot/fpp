@@ -12,7 +12,7 @@
 #include "Fw/Types/Serializable.hpp"
 #include "Fw/Types/String.hpp"
 
-class SM_E :
+class SM_E final :
   public Fw::Serializable
 {
 

@@ -14,7 +14,7 @@
 #include "SDefaultSerializableAc.hpp"
 
 //! Struct wrapping a struct with a default field
-class SWrapper :
+class SWrapper final :
   public Fw::Serializable
 {
 

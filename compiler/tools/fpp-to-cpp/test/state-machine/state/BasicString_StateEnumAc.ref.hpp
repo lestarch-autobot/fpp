@@ -16,7 +16,7 @@ namespace FppTest {
 
   namespace SmState {
 
-    class BasicString_State :
+    class BasicString_State final :
       public Fw::Serializable
     {
 

@@ -17,7 +17,7 @@
 #include "PrimitiveF64ArrayAc.hpp"
 
 //! An array of arrays
-class PrimitiveArray :
+class PrimitiveArray final :
   public Fw::Serializable
 {
 

@@ -16,7 +16,7 @@
 #include "Fw/Types/String.hpp"
 
 //! An array with one element
-class SingleElement :
+class SingleElement final :
   public Fw::Serializable
 {
 

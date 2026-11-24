@@ -16,7 +16,7 @@ namespace FppTest {
 
   namespace SmState {
 
-    class BasicSelf_State :
+    class BasicSelf_State final :
       public Fw::Serializable
     {
 

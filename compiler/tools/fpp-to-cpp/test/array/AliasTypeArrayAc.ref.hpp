@@ -17,7 +17,7 @@
 #include "Fw/Types/String.hpp"
 
 //! An array of abstract type
-class AliasType :
+class AliasType final :
   public Fw::Serializable
 {
 

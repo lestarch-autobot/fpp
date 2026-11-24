@@ -15,7 +15,7 @@
 #include "Fw/Types/Serializable.hpp"
 #include "Fw/Types/String.hpp"
 
-class C_A :
+class C_A final :
   public Fw::Serializable
 {
 

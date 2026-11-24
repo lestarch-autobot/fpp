@@ -16,7 +16,7 @@ namespace FppTest {
 
   namespace SmChoice {
 
-    class ChoiceToChoice_State :
+    class ChoiceToChoice_State final :
       public Fw::Serializable
     {
 

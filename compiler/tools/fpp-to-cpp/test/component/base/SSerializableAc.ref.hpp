@@ -14,7 +14,7 @@
 #include "config/FwSizeStoreTypeAliasAc.hpp"
 
 //! A struct
-class S :
+class S final :
   public Fw::Serializable
 {
 

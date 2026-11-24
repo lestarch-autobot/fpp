@@ -16,7 +16,7 @@
 #include "TAliasAliasAc.hpp"
 #include "U16AliasAliasAc.hpp"
 
-class AliasType :
+class AliasType final :
   public Fw::Serializable
 {
 

@@ -15,7 +15,7 @@
 #include "Fw/Types/Serializable.hpp"
 #include "Fw/Types/String.hpp"
 
-class LargeSize :
+class LargeSize final :
   public Fw::Serializable
 {
 

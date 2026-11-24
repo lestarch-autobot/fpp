@@ -16,7 +16,7 @@
 #include "Fw/Types/Serializable.hpp"
 #include "Fw/Types/String.hpp"
 
-class Enum2 :
+class Enum2 final :
   public Fw::Serializable
 {
 

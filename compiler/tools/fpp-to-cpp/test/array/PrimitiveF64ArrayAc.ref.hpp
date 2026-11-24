@@ -18,7 +18,7 @@
 namespace M {
 
   //! An array of F64 with default value and format string
-  class PrimitiveF64 :
+  class PrimitiveF64 final :
     public Fw::Serializable
   {
 

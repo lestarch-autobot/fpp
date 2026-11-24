@@ -13,7 +13,7 @@
 #include "Fw/Types/String.hpp"
 
 //! An enum type with an alias as its serial type
-class AliasSerialType :
+class AliasSerialType final :
   public Fw::Serializable
 {
 

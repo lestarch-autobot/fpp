@@ -16,7 +16,7 @@
 #include "SimpleCType2AliasAc.hpp"
 #include "SimpleCTypeAliasAc.hpp"
 
-class Namespace :
+class Namespace final :
   public Fw::Serializable
 {
 

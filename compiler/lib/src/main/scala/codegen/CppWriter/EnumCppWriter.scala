@@ -75,7 +75,8 @@ case class EnumCppWriter(
       AnnotationCppWriter.asStringOpt(aNode),
       name,
       Some("public Fw::Serializable"),
-      getClassMembers
+      getClassMembers,
+      CppDoc.Class.Final
     )
     List(
       List(hppIncludes, cppIncludes),

@@ -15,7 +15,7 @@
 namespace M {
 
   //! An enum with a default value
-  class Default :
+  class Default final :
     public Fw::Serializable
   {
 

@@ -13,7 +13,7 @@
 #include "Fw/Types/String.hpp"
 
 //! An enum with specified default value
-class E2 :
+class E2 final :
   public Fw::Serializable
 {
 

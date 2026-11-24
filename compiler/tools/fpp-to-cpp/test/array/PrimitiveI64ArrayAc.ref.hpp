@@ -18,7 +18,7 @@
 namespace M {
 
   //! An array of I64 with format string
-  class PrimitiveI64 :
+  class PrimitiveI64 final :
     public Fw::Serializable
   {
 

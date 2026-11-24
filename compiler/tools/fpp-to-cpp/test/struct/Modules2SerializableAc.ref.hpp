@@ -15,7 +15,7 @@
 
 namespace M {
 
-  class Modules2 :
+  class Modules2 final :
     public Fw::Serializable
   {
 

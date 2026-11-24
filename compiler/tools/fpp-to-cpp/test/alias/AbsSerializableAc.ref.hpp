@@ -13,7 +13,7 @@
 #include "Fw/Types/Serializable.hpp"
 #include "Fw/Types/String.hpp"
 
-class Abs :
+class Abs final :
   public Fw::Serializable
 {
 

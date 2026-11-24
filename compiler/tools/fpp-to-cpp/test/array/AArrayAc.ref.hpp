@@ -16,7 +16,7 @@
 #include "Fw/Types/String.hpp"
 
 //! An identical array outside the component
-class A :
+class A final :
   public Fw::Serializable
 {
 

@@ -16,7 +16,7 @@
 #include "Fw/Types/Serializable.hpp"
 #include "Fw/Types/String.hpp"
 
-class ArrayAliasArray :
+class ArrayAliasArray final :
   public Fw::Serializable
 {
 

@@ -15,7 +15,7 @@
 namespace M {
 
   //! An enum with serialize type specified
-  class SerializeType :
+  class SerializeType final :
     public Fw::Serializable
   {
 

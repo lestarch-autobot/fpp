@@ -16,7 +16,7 @@
 #include "Fw/Types/String.hpp"
 
 //! An array
-class A :
+class A final :
   public Fw::Serializable
 {
 

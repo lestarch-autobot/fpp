@@ -18,7 +18,7 @@
 namespace M {
 
   //! An array of I32 with format string
-  class PrimitiveI32 :
+  class PrimitiveI32 final :
     public Fw::Serializable
   {
 

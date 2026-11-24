@@ -16,7 +16,7 @@
 #include "include/T.hpp"
 
 //! Test the include header path of an abstract type
-class HeaderPath :
+class HeaderPath final :
   public Fw::Serializable
 {
 

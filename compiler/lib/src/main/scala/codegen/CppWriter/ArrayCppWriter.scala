@@ -74,7 +74,8 @@ case class ArrayCppWriter (
       AnnotationCppWriter.asStringOpt(aNode),
       name,
       Some("public Fw::Serializable"),
-      getClassMembers
+      getClassMembers,
+      CppDoc.Class.Final
     )
     List.concat(
       List(hppIncludes, cppIncludes),

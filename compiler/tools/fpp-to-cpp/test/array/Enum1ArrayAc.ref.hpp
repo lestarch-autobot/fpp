@@ -17,7 +17,7 @@
 #include "Fw/Types/String.hpp"
 
 //! Array with enum argument
-class Enum1 :
+class Enum1 final :
   public Fw::Serializable
 {
 

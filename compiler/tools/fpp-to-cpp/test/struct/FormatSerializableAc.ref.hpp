@@ -12,7 +12,7 @@
 #include "Fw/Types/Serializable.hpp"
 #include "Fw/Types/String.hpp"
 
-class Format :
+class Format final :
   public Fw::Serializable
 {
 

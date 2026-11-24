@@ -16,7 +16,7 @@ namespace FppTest {
 
   namespace SmState {
 
-    class BasicGuardTestEnum_State :
+    class BasicGuardTestEnum_State final :
       public Fw::Serializable
     {
 

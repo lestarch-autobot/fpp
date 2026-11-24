@@ -13,7 +13,7 @@
 #include "Fw/Types/String.hpp"
 
 //! An enum
-class E :
+class E final :
   public Fw::Serializable
 {
 

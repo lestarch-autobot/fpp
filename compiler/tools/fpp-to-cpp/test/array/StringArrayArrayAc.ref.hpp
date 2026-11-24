@@ -16,7 +16,7 @@
 #include "String2ArrayAc.hpp"
 
 //! An array of arrays of strings
-class StringArray :
+class StringArray final :
   public Fw::Serializable
 {
 

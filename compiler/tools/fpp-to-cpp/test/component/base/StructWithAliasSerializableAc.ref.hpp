@@ -18,7 +18,7 @@
 #include "Fw/Types/Serializable.hpp"
 #include "Fw/Types/String.hpp"
 
-class StructWithAlias :
+class StructWithAlias final :
   public Fw::Serializable
 {
 

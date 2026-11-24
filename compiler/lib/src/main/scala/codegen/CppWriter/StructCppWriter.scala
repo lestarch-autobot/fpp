@@ -380,7 +380,8 @@ case class StructCppWriter(
       AnnotationCppWriter.asStringOpt(aNode),
       structName,
       Some("public Fw::Serializable"),
-      getClassMembers
+      getClassMembers,
+      CppDoc.Class.Final
     )
     hppIncludes ::
     cppIncludes ::

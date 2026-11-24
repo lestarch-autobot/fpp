@@ -15,7 +15,7 @@
 namespace M {
 
   //! An enum with explicit constant values
-  class Explicit :
+  class Explicit final :
     public Fw::Serializable
   {
 

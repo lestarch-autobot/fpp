@@ -15,7 +15,7 @@
 namespace M {
 
   //! An enum with implicit constant values
-  class Implicit :
+  class Implicit final :
     public Fw::Serializable
   {
 

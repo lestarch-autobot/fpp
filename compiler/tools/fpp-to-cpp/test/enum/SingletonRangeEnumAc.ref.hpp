@@ -12,7 +12,7 @@
 #include "Fw/Types/Serializable.hpp"
 #include "Fw/Types/String.hpp"
 
-class SingletonRange :
+class SingletonRange final :
   public Fw::Serializable
 {
 

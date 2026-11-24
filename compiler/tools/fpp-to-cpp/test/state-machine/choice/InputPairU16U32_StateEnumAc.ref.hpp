@@ -16,7 +16,7 @@ namespace FppTest {
 
   namespace SmChoice {
 
-    class InputPairU16U32_State :
+    class InputPairU16U32_State final :
       public Fw::Serializable
     {
 

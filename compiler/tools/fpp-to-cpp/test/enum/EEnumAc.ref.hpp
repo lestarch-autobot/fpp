@@ -13,7 +13,7 @@
 #include "Fw/Types/String.hpp"
 
 //! An identical enum outside the component
-class E :
+class E final :
   public Fw::Serializable
 {
 

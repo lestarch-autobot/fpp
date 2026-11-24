@@ -13,7 +13,7 @@
 #include "Fw/Types/String.hpp"
 
 //! An identical struct outside the component
-class S :
+class S final :
   public Fw::Serializable
 {
 

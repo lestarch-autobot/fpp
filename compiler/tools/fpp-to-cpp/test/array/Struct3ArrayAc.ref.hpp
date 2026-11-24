@@ -17,7 +17,7 @@
 #include "S3SerializableAc.hpp"
 
 //! An array of structs with array member
-class Struct3 :
+class Struct3 final :
   public Fw::Serializable
 {
 
